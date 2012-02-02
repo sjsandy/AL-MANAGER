@@ -61,9 +61,7 @@ Answer to foo bar dilemma.
 
 = 0.1 Beta =
 
-
 == Upgrade Notice ==
-
 
 = 0.1 =
 First release
