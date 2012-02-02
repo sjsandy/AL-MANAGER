@@ -38,11 +38,18 @@ class al_manager {
 	$autoloadManager->setSaveFile(AL_DIR . '/autoload.php');
 
         //folder array
-        $folders = array(
-            AL_DIR.'/library/',
-            AL_DIR.'/includes/',
-            AL_DIR.'/modules/',
-        );
+//        $folders = array(
+//            AL_DIR.'/library/',
+//            AL_DIR.'/includes/',
+//            AL_DIR.'/modules/',
+//        );
+
+        $folders = array();
+        $folders[] = AL_DIR.'/library/';
+        $folders[] = AL_DIR.'/includes/';
+        $folders[] = AL_DIR.'/modules/';
+
+
 
         //add the filter
         if(has_filter('alm_filter')):
@@ -53,6 +60,15 @@ class al_manager {
             $autoloadManager->addFolder($path);
         endforeach;
         $autoloadManager->register();
+    }
+
+    //@todo add custom directory
+    public function add_custom(){
+        add_filter('alm_filter', array($this,'custom'));
+    }
+
+    public function custom(){
+
     }
 
 }

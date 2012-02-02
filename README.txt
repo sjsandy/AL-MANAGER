@@ -32,7 +32,7 @@ So basically, you don’t have anymore to implement some complex naming rules be
 2. Activate the plugin through the 'Plugins' menu in WordPress
 
 
-= Add your custom classes / libraries paths =
+= Add your classes / libraries paths =
 
 `<?php
 /**
@@ -49,7 +49,7 @@ function al_paths($folders) {
     return $folders;
 }
 
-//*** access the classes *******//
+//*** access the classes in folder *******//
 
 // Create an instance of the paypal library
 $myPaypal = new Paypal();
@@ -92,11 +92,6 @@ Directory structure ;
 - /library : Packaged classes are placed here
 - /modules : classes designed to work with in wordpress are place here, and follow a simple naming convention e.g. mod_prefix_name.php
 
-Add your own
-- /custom : Create these directories to automatically add your custom classes/libraries/modules
------ /custom/includes
------ /custom/library
------ /custom/modules
 
 = Classes / Libraries =
 
