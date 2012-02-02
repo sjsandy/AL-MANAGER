@@ -21,11 +21,30 @@ AutoLoad Manager is a simple PHP  class / interface auto-load manager for WordPr
 Extract the zip file and just drop the contents in the wp-content/plugins/ directory of your WordPress installation and then activate the Plugin from Plugins page.
 == Frequently Asked Questions ==
 
-Please see Crafted&Pressed for info
+Please see <a href="http://ifitiscreative.com">ifitiscreative.com</a>
+
 == Screenshots ==
 1. Screenshot
 
 == Changelog ==
 Changes
 
-==Readme Generator==
+== Upgrade Notice ==
+
+= 0.1 =
+Beta version
+
+== Arbitrary section ==
+
+USAGE
+`<php /**
+ * autoload filter
+ */
+add_filter('alm_filter', 'al_paths');
+
+function al_paths($folders) {
+    $p = array(AL_DIR . '/inc/');
+    $folders = array_merge($p, $folders);
+    return $folders;
+}
+?>`
