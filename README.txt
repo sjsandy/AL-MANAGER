@@ -52,9 +52,6 @@ function al_paths($folders) {
 
 == Frequently Asked Questions ==
 
-= A question that someone might have =
-
-An answer to that question.
 
 = What about foo bar? =
 
