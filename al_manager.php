@@ -35,19 +35,18 @@ class al_manager {
 
         //autoload class
         $autoloadManager = new AutoloadManager();
-	$autoloadManager->setSaveFile(AL_DIR. '/autoload.php');
+	$autoloadManager->setSaveFile(AL_DIR . '/autoload.php');
 
         //folder array
         $folders = array(
             AL_DIR.'/library/',
             AL_DIR.'/includes/',
             AL_DIR.'/modules/',
-            AL_DIR.'/phpfour-payment/',
         );
 
         //add the filter
-        if(has_filter('al_manger_filter')):
-           $folders = apply_filters('al_manager_filters', $folders);
+        if(has_filter('alm_filter')):
+           $folders = apply_filters('alm_filter', $folders);
         endif;
 
         foreach($folders as $path):
@@ -58,4 +57,4 @@ class al_manager {
 
 }
 
-$load_al_manger = al_manager::load();
+
