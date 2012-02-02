@@ -30,13 +30,13 @@ So basically, you don’t have anymore to implement some complex naming rules be
 
 1. Install/Upload `plugin-name.php` to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Add class files to the plugin includes/library/modules folder
+
 
 = Add your custom classes / libraries paths =
 
 `<?php
 /**
- * --- AL-Manager -----
+ * --- AL-Manager Example-----
  */
 
 //check if ALM is loaded and add filter
@@ -44,10 +44,26 @@ if(class_exists('almanager')) add_filter('alm_filter', 'al_paths');
 
 //sample fliter adds 'inc' dir to the autoload paths
 function al_paths($folders) {
-    $p = array(AL_DIR . '/inc/');
+    $p = array(AL_DIR . '/library/phpfour-payment');
     $folders = array_merge($p, $folders);
     return $folders;
 }
+
+//*** access the classes *******//
+
+// Create an instance of the paypal library
+$myPaypal = new Paypal();
+
+// Specify your paypal email
+$myPaypal->addField('business', 'YOUR_PAYPAL_EMAIL');
+
+// Create an instance of the authorize.net library
+$myAuthorize = new Authorize();
+
+// Specify your authorize.net login and secret
+$myAuthorize->setUserInfo('YOUR_LOGIN', 'YOUR_SECRET_KEY');
+
+
  ?>`
 
 == Frequently Asked Questions ==
@@ -68,13 +84,19 @@ First release
 
 == Arbitrary section ==
 
-While AL_Manager was designed to be flexible it does come with some presets / conventions that you can use (if you choose) out of the box
+While AL_Manager was designed to be flexible it does come with some presets / conventions that you can use (if you choose).
 
 Directory structure ;
 
 - /includes : All single file classes are placed here
-- /library : Add your classes that come packaged in folders here
+- /library : Packaged classes are placed here
 - /modules : classes designed to work with in wordpress are place here, and follow a simple naming convention e.g. mod_prefix_name.php
+
+Add your own
+- /custom : Create these directories to automatically add your custom classes/libraries/modules
+----- /custom/includes
+----- /custom/library
+----- /custom/modules
 
 = Classes / Libraries =
 
@@ -90,4 +112,4 @@ For more classes/ libraries please visit http://autoloadmanger.shawnandy.com
 
 = Submit =
 
-Submit you classes / libraries to http://autoloadmanger.shawnandy.com
+Submit or suggest classes / libraries to http://autoloadmanger.shawnandy.com
