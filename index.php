@@ -22,5 +22,5 @@ include_once WP_PLUGIN_DIR.'/al-manager/al_manager.php' ;
 add_action('init', 'alm_init');
 
 function alm_init(){
-    $load_al_manger = al_manager::load();
+    $load_al_manger = al_manager::load()->autoload();
 }
