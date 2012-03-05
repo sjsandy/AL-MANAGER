@@ -11,11 +11,26 @@ include_once AL_DIR . '/autoloadManager.php';
 
 class al_manager {
 
+    private static $instance;
+
     /**
      *
      */
-    public function __construct() {
+    private function __construct() {
         //$this->autoload();
+    }
+
+
+    /**
+     *
+     * @return type
+     */
+    public static function  instance(){
+         if (!isset(self::$instance)) {
+            self::$instance = new al_manager();
+        }
+        return self::$instance;
+
     }
 
     /**
@@ -25,6 +40,10 @@ class al_manager {
     public static function load() {
         return new al_manager;
     }
+
+    /**
+     * Sigleton pattern
+     */
 
     /**
      *
