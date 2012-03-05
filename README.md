@@ -9,6 +9,7 @@ Stable tag: trunk
 AutoLoad Manager is a simple PHP,  class / interface auto-load manager for WordPress, built with PHP-Autoload-Manager.
 
 == Description ==
+===========
 
 A simple PHP classes / interface auto-load manager for wordpress, built with PHP-Autoload-Manager by http://bashar.alfallouji.com/php-autoload-manager/. AL-Manager allows you to easily extend the power of WordPress using Object Oriented PHP, classes and libraries.
 
