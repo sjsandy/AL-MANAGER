@@ -8,10 +8,28 @@
 
 class ext_mobile extends Mobile_Detect {
 
+    private static $instance;
 
+    /**
+     * Singleton Pattenr
+     * @return class object
+     */
+    public static function instance() {
+        if (!is_object(self::$instance)) {
+            $class = __CLASS__;
+            self::$instance = new $class;
+        }
+        return self::$instance;
+    }
+
+    /**
+     *
+     */
     function __construct() {
         parent::__construct();
     }
+
+
 
     /**
      * detect if mobile is phone
@@ -45,6 +63,11 @@ class ext_mobile extends Mobile_Detect {
     public static function detect() {
         return new mod_mobile;
     }
+
+    /**
+     * Singleton pattern
+     */
+
 
 
     /**
