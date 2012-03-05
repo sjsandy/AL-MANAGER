@@ -64,7 +64,7 @@ class al_manager {
         $folders = array();
         //$folders[] = AL_DIR . '/library/';
         $folders[] = AL_DIR . '/includes/';
-        $folders[] = AL_DIR . '/modules/';
+        //$folders[] = AL_DIR . '/modules/';
 
 
 
@@ -89,7 +89,7 @@ class al_manager {
 
     public function custom($folders) {
         $dir = array(AL_DIR . '/custom/');
-        $folders = array_merge($dir, $folders);
+                 $folders = array_merge($dir, $folders);
         return $folders;
     }
 
