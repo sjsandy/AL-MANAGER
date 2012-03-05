@@ -109,3 +109,11 @@ For more classes/ libraries please visit http://autoloadmanger.shawnandy.com
 = Submit =
 
 Submit or suggest classes / libraries to http://autoloadmanger.shawnandy.com
+
+
+Current Version
+===============
+
+The line below is used for the updater API, please leave it untouched unless bumping the version up :)
+
+~Current Version:0.1~
