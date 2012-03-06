@@ -26,6 +26,8 @@ function alm_init(){
 }
 
 
+
+include_once WP_PLUGIN_DIR.'/al-manager/includes/git-wordpress-wpdates/updater.php';
 if (is_admin()) { // note the use of is_admin() to double check that this is happening in the admin
     $config = array(
         'slug' => plugin_basename(__FILE__), // this is the slug of your plugin
