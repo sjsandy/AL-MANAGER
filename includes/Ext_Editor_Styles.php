@@ -9,7 +9,7 @@
 
 class Ext_Editor_Styles {
 
-    public static $instance;
+    
     private $styles = array();
 
     public function set_styles($styles) {
