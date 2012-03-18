@@ -21,6 +21,7 @@ class Mobile_Detect
 	protected $isWindows = null;
 	protected $isWindowsphone = null;
 	protected $isGeneric = null;
+	protected $isKindlefire = null;
 	protected $devices = array(
 		"android" => "android.*mobile",
 		"androidtablet" => "android(?!.*mobile)",
@@ -28,6 +29,7 @@ class Mobile_Detect
 		"blackberrytablet" => "rim tablet os",
 		"iphone" => "(iphone|ipod)",
 		"ipad" => "(ipad)",
+		"kindlefire" => "(kindle 2|silk)",
 		"palm" => "(avantgo|blazer|elaine|hiptop|palm|plucker|xiino)",
 		"windows" => "windows ce; (iemobile|ppc|smartphone)",
 		"windowsphone" => "windows phone os",

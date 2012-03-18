@@ -6,7 +6,7 @@
  */
 
 
-class ext_mobile extends Mobile_Detect {
+class Ext_mobile extends Mobile_Detect {
 
     private static $instance;
 
@@ -25,7 +25,7 @@ class ext_mobile extends Mobile_Detect {
     /**
      *
      */
-    function __construct() {
+    private function __construct() {
         parent::__construct();
     }
 

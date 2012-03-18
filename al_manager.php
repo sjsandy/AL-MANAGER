@@ -52,27 +52,17 @@ class al_manager {
 
         //autoload class
         $autoloadManager = new AutoloadManager();
+        //sets the save path fo the file
         $autoloadManager->setSaveFile(AL_DIR . '/autoload.php');
-
-        //folder array
-//        $folders = array(
-//            AL_DIR.'/library/',
-//            AL_DIR.'/includes/',
-//            AL_DIR.'/modules/',
-//        );
-
+        // Define folders array
         $folders = array();
-        //$folders[] = AL_DIR . '/library/';
+        //default folder
         $folders[] = AL_DIR . '/includes/';
-        //$folders[] = AL_DIR . '/modules/';
-
-
-
         //add the filter
         if (has_filter('alm_filter')):
             $folders = apply_filters('alm_filter', $folders);
         endif;
-
+        // add Folder paths stored in the folder array
         foreach ($folders as $path):
             $autoloadManager->addFolder($path);
         endforeach;
