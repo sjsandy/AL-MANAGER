@@ -7,9 +7,9 @@
  * @author studio
  */
 
-class Ext_Editor_Styles {
+class EXT_Editor_Styles {
 
-    
+
     private $styles = array();
 
     public function set_styles($styles) {

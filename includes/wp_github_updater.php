@@ -13,11 +13,12 @@
 
 include_once WP_PLUGIN_DIR.'/al-manager/includes/updater.php';
 
-class wp_git_updater extends wp_github_updater {
+class wp_github_updater {
 
     public function __construct() {
-        parent::__construct();
 
     }
 
 }
+
+?>
