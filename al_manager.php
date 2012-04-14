@@ -58,6 +58,7 @@ class al_manager {
         $folders = array();
         //default folder
         $folders[] = AL_DIR . '/includes/';
+        $folders[] = get_stylesheet_directory() . '/vendor/';
         $folders[] = get_template_directory() . '/vendor/';
         //add the filter
         if (has_filter('alm_filter')):
