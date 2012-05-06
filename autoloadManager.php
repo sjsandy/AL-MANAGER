@@ -17,7 +17,7 @@
 /**
  * File:        autoloadManager.php
  *
- * @author      Al-Fallouji Bashar 
+ * @author      Al-Fallouji Bashar
  * @author      Charron Pierrick
  * @version     2.0
  */
@@ -224,6 +224,7 @@ class autoloadManager
      */
     public function loadClass($className)
     {
+        $className = strtolower($className);
         // check if the class already exists in the cache file
         $loaded = $this->checkClass($className, $this->_classes);
         if (!$loaded && (self::SCAN_ONCE & $this->_scanOptions))
@@ -269,19 +270,14 @@ class autoloadManager
      */
     private function checkClass($className, array $classes)
     {
-        if (array_key_exists($className, $classes))
+        if (isset($classes[$className]))
         {
-            $classPath = $classes[$className];
-            // return true if the
-            if (null === $classPath)
-            {
-                return self::CLASS_IS_NULL;
-            }
-            elseif (file_exists($classPath))
-            {
-                require($classes[$className]);
-                return self::CLASS_EXISTS;
-            }
+            require $classes[$className];
+            return self::CLASS_EXISTS;
+        }
+        elseif (array_key_exists($className, $classes))
+        {
+            return self::CLASS_IS_NULL;
         }
         return self::CLASS_NOT_FOUND;
     }
@@ -369,11 +365,11 @@ class autoloadManager
                     $i+=2;
                     if ($namespace)
                     {
-                        $classes[] = $namespace . '\\' . $tokens[$i][1];
+                        $classes[] = strtolower($namespace . '\\' . $tokens[$i][1]);
                     }
                     else
                     {
-                        $classes[] = $tokens[$i][1];
+                        $classes[] = strtolower($tokens[$i][1]);
                     }
                     break;
             }

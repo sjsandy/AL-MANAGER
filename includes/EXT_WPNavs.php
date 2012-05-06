@@ -1,5 +1,6 @@
 <?php
 
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -20,7 +21,7 @@
  * </code>
  * @author studio
  */
-class EXT_WPNavs {
+class Ext_WPNavs {
 
      private $menu,
             $theme_location = 'primary',

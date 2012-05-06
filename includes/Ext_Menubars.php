@@ -6,6 +6,12 @@
  * @author studio
  */
 
+class Ext_Menubars {
+
+
+}
+
+
 /**
  * Quickly add post edits links to the Adminbar
  * <code>
@@ -19,7 +25,9 @@
   Post_Menus::add()->set_node_id('custom_options')->set_node_title('UI.Options')->published('cwp_custom_options');
  * </code>
  */
-class Post_Menus {
+
+
+class Ext_Post_Menus {
 
     private $items = 10,
             $node_parent,
@@ -97,8 +105,8 @@ class Post_Menus {
      */
     public static function instance() {
         if (!is_object(self::$instance)):
-            $class = new Post_Menus();
-            self::$instance = $class;
+            $class = __CLASS__;
+            self::$instance = new $class;
         endif;
         return self::$instance;
     }
@@ -108,7 +116,8 @@ class Post_Menus {
      * @return Post_Menus method (chainable);
      */
     public static function add() {
-        $factory = new Post_Menus();
+        $class = __CLASS__;
+        $factory = new $class;
         return $factory;
     }
 

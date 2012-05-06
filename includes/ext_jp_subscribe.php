@@ -1,11 +1,12 @@
 <?php
 
+
 /**
  * Customizes JetPack subsctiption.
  * @author studio
  * Credit : http://kovshenin.com/2012/using-jetpack-for-e-mail-subscriptions-in-wordpress/
  */
-class ext_jp_subscribe {
+class Ext_jp_subscribe {
 
     private $invalid_email,
             $success_message,

@@ -1,13 +1,14 @@
 <?php
 
 
+
 /**
  * Description of Ext_MCE_Styles
  *
  * @author studio
  */
 
-class EXT_Editor_Styles {
+class Ext_Editor_Styles {
 
 
     private $styles = array();
