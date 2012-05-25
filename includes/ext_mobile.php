@@ -6,7 +6,7 @@
  */
 
 
-class Ext_mobile extends Mobile_Detect {
+class Ext_Mobile extends Mobile_Detect {
 
     private static $instance;
 
@@ -74,7 +74,9 @@ class Ext_mobile extends Mobile_Detect {
      * adds a .mobile class to the WP body
      */
     public static function mobile_class(){
-        if(mod_mobile::detect()->isMobile()) add_filter( 'body_class', array('mod_mobile','add_mobile_class'));
+        if(mod_mobile::detect()->isMobile()) :
+            add_filter( 'body_class', array('mod_mobile','add_mobile_class'));
+        endif;
     }
 
     /**
