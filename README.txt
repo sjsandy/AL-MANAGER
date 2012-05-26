@@ -6,7 +6,7 @@ Requires at least: 3.0
 Tested up to: 3.3
 Stable tag: trunk
 
-AutoLoad Manager is a simple PHP,  class / interface auto-load manager for WordPress, built with PHP-Autoload-Manager.
+AutoLoad Manager is a simple PHP,  class / interface auto-load manager for WordPress, built with PHP-Autoload-Manager. http://autoloadmanager.shawnsandy.com/
 
 == Description ==
 
@@ -44,8 +44,8 @@ if(class_exists('almanager')) add_filter('alm_filter', 'al_paths');
 
 //sample fliter adds 'inc' dir to the autoload paths
 function al_paths($folders) {
-    $p = array(AL_DIR . '/library/phpfour-payment');
-    $folders = array_merge($p, $folders);
+    $dir = array(AL_DIR . '/library/phpfour-payment');
+    $folders = array_merge($dir, $folders);
     return $folders;
 }
 

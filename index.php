@@ -2,11 +2,11 @@
 
 /*
 Plugin Name: AL Manager
-Plugin URI: http://craftedandpressed.com
+Plugin URI: http://autoloadmanager.shawnsandy.com
 Description: A simple php autoload manager for wordpress, built with PHP-Autoload-Manager http://bashar.alfallouji.com/PHP-Autoload-Manager/. AL-Manager allows you to easily extend the power of WordPress using Object Oriented PHP; classes and libraries.
 Author: Shawn Sandy
 Author URI: http://shawnsandy.com
-Version: 1.0
+Version: 1.1
 */
 
 /*
