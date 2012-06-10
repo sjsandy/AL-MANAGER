@@ -7,6 +7,9 @@
  */
 define('AL_DIR', WP_PLUGIN_DIR . '/al-manager');
 
+
+
+
 include_once AL_DIR . '/autoloadManager.php';
 
 class al_manager {
@@ -42,6 +45,14 @@ class al_manager {
     }
 
     /**
+     * class factory
+     * @return \al_manager
+     */
+    public static function factory() {
+        return new al_manager;
+    }
+
+    /**
      * Sigleton pattern
      */
 
@@ -49,29 +60,90 @@ class al_manager {
      *
      */
     public function autoload() {
-
-        //autoload class
-        $autoloadManager = new AutoloadManager();
-        //sets the save path fo the file
-        $autoloadManager->setSaveFile(AL_DIR . '/autoload.php');
+//        //autoload class
+//        $autoloadManager = new AutoloadManager();
+//        //sets the save path fo the file
+//        $autoloadManager->setSaveFile(AL_DIR . '/autoload.php');
         // Define folders array
         $folders = array();
         //default folder
+        //*******THEME VENDOR DIRECTORY********
         $folders[] = AL_DIR . '/includes/';
         if(file_exists(get_stylesheet_directory() . '/vendor/'))
         $folders[] = get_stylesheet_directory() . '/vendor/';
         if(file_exists(get_template_directory() . '/vendor/'))
         $folders[] = get_template_directory() . '/vendor/';
+        //*******WP_CONTENT VENDOR DIRECTORY********
+        $folders[] = AL_DIR . '/includes/';
+        if(file_exists(WP_CONTENT_DIR . '/vendor/'))
+        $folders[] = WP_CONTENT_DIR . '/vendor/';
         //add the filter
-        if (has_filter('alm_filter')):
-            $folders = apply_filters('alm_filter', $folders);
+        $_folders = $this->get_class_folders();
+
+        if(is_array($_folders))
+            $folders = array_merge($_folders, $folders);
+
+        // add Folder paths stored in the folder array
+//        foreach ($all_folders as $path):
+//            $autoloadManager->addFolder($path);
+//        endforeach;
+//        $autoloadManager->register();
+
+        $this->add_classes(AL_DIR.'/autoload.php', $folders);
+        return $this;
+        
+
+    }
+
+    public function get_class_folders(){
+        $folders = get_option('ALM_class_folders');
+        return is_array($folders) ? $folders : array();
+    }
+
+    /**
+     *
+     * @param array $folder
+     */
+    public function add_class_folder($folder = null){
+        $fl = $this->get_class_folders();
+        if(!in_array($folder, $fl)):
+        $addfl = array_merge($fl,array($folder));
+        update_option('ALM_class_folders', $addfl);
         endif;
+
+        return $this;
+    }
+
+    public function del_class_folder($folder = null){
+        if(isset($folder)):
+            if($opts = get_option('ALM_class_folders')):
+                foreach ($opts as $key => $value) {
+                    if($value == $folder):
+                        unset($opts[$key]);
+                    endif;
+                }
+            endif;
+            update_option('ALM_class_folders', $opts);
+        endif;
+    }
+
+
+    public function add_classes($save_to = null, $folders= array() ){
+
+        $autoloadManager = new AutoloadManager();
+        //sets the save path fo the file
+        $autoloadManager->setSaveFile($save_to);
         // add Folder paths stored in the folder array
         foreach ($folders as $path):
             $autoloadManager->addFolder($path);
         endforeach;
+
         $autoloadManager->register();
+
     }
+
+
+
 
     /**
      * use to add your custom classes please create the custom
@@ -96,6 +168,9 @@ class al_manager {
         $folders = array_merge($dir, $folders);
         return $folders;
     }
+
+
+
 
 }
 
