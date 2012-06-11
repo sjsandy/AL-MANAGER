@@ -5,7 +5,7 @@
  *
  * @author Studio365
  */
-define('AL_DIR', WP_PLUGIN_DIR . '/al-manager');
+define('AL_DIR', dirname(__FILE__)  . '/');
 
 
 
@@ -74,7 +74,6 @@ class al_manager {
         if(file_exists(get_template_directory() . '/vendor/'))
         $folders[] = get_template_directory() . '/vendor/';
         //*******WP_CONTENT VENDOR DIRECTORY********
-        $folders[] = AL_DIR . '/includes/';
         if(file_exists(WP_CONTENT_DIR . '/vendor/'))
         $folders[] = WP_CONTENT_DIR . '/vendor/';
         //add the filter
@@ -91,8 +90,6 @@ class al_manager {
 
         $this->add_classes(AL_DIR.'/autoload.php', $folders);
         return $this;
-        
-
     }
 
     public function get_class_folders(){
@@ -106,6 +103,7 @@ class al_manager {
      */
     public function add_class_folder($folder = null){
         $fl = $this->get_class_folders();
+        if(!file_exists($folder)) return $this;
         if(!in_array($folder, $fl)):
         $addfl = array_merge($fl,array($folder));
         update_option('ALM_class_folders', $addfl);
@@ -128,6 +126,7 @@ class al_manager {
     }
 
 
+
     public function add_classes($save_to = null, $folders= array() ){
 
         $autoloadManager = new AutoloadManager();
@@ -142,7 +141,44 @@ class al_manager {
 
     }
 
+    public function add_folders_filter(){
 
+        if(has_filter('alm_filter')):
+           $folders = array();
+        $_folders = apply_filters('alm_filter', $folders);
+         //check if is array / not empty
+        if(empty($_folders) or !is_array($_folders)) return false;
+
+        foreach ($_folders as $value) {
+            $this->add_class_folder($value);
+        }
+         return $this;
+        endif;
+
+
+
+    }
+
+    public function del_folders_filter(){
+
+        if(has_filter('del_alm_filter')):
+            $folders = array();
+        $_folders = apply_filters('del_alm_filter', $folders);
+         //check if is array / not empty
+        if(empty($_folders) or !is_array($_folders)) return false;
+
+        foreach ($_folders as $value) {
+            $this->del_class_folder($value);
+        }
+        return $this;
+        endif;
+
+
+    }
+
+    public function clean_options(){
+
+    }
 
 
     /**
