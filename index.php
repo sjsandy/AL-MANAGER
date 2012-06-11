@@ -29,6 +29,7 @@ function alm_init(){
     $almmanager->add_folders_filter();
     $almmanager->del_folders_filter();
     $almmanager->clean_options();
+    
 }
 
 /**
