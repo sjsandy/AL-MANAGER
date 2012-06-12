@@ -126,6 +126,17 @@ class al_manager {
     }
 
 
+    public function clean_options(){
+        $opts = $this->get_class_folders();
+        foreach ($opts as $key => $value) {
+            if(!file_exists($value)):
+            $this->del_class_folder($value);
+            endif;
+        }
+
+    }
+
+
 
     public function add_classes($save_to = null, $folders= array() ){
 
@@ -176,9 +187,6 @@ class al_manager {
 
     }
 
-    public function clean_options(){
-
-    }
 
 
     /**
