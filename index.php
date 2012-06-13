@@ -17,7 +17,7 @@ include_once dirname(__FILE__) .'/al_manager.php' ;
 /**
  * instaniate the al_manger class
  */
-//al_manager::load()->autoload();
+al_manager::instance()->autoload();
 
 //run al_manager on init;
 
@@ -29,7 +29,7 @@ function alm_init(){
     $almmanager->add_folders_filter();
     $almmanager->del_folders_filter();
     $almmanager->clean_options();
-    
+
 }
 
 /**

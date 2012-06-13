@@ -30,12 +30,18 @@ class Ext_Menubars {
 class Ext_Post_Menus {
 
     private $items = 10,
-            $node_parent,
+            $node_parent=false,
             $post_status = 'publish',
             $post_type = 'post',
             $post_types = false,
             $node_id = 'menu-node',
             $node_title = 'Menu Title';
+
+    public function set_node_parent($node_parent) {
+        $this->node_parent = $node_parent;
+        return $this;
+    }
+
 
     /**
      * Menu ID
@@ -232,16 +238,40 @@ class Ext_Post_Menus {
      */
     public function nodes($wp_admin_bar) {
 
-        /*         * * parent node ** */
-        $args = array(
-            'id' => $this->node_id,
-            'title' => $this->node_title,
-            'href' => '#',
-            'class' => 'ext-menubars-' . $this->node_id,
-            'meta' => array(
-                'class' => $this->node_id,
-                'title' => $this->node_title . ' Menu')
-        );
+
+
+        //** parent node **//
+        $parent = $this->node_parent ? $this->node_parent : $this->node_id ;
+
+
+        // sets a parent or child node
+        if ($this->node_parent):
+            /*             * * parent node ** */
+            $args = array(
+                'id' => $this->node_id,
+                'title' => '<span class="apm-child" style="text-shadow: none; font-weight:bold">' . $this->node_title .'</span>',
+                'class' => 'ext-menubars-' . $this->node_id,
+                'parent' => $parent,
+                'meta' => array(
+                    'class' => $this->node_id,
+                    'title' => $this->node_title . ' Menu')
+            );
+        else:
+            /*             * * parent node ** */
+            $args = array(
+                'id' => $this->node_id,
+                'title' => $this->node_title,
+                'href' => '#',
+                'class' => 'ext-menubars-' . $this->node_id,
+                'meta' => array(
+                    'class' => $this->node_id,
+                    'title' => $this->node_title . ' Menu')
+            );
+        endif;
+
+
+
+
         $wp_admin_bar->add_node($args);
 
 
@@ -250,6 +280,7 @@ class Ext_Post_Menus {
             $data = $this->data_all();
         else
             $data = $this->data();
+
 
         /** Check the data and proceed * */
         //if (!$data OR !is_array($data))return false;
@@ -260,7 +291,7 @@ class Ext_Post_Menus {
                     'id' => $this->node_id . '-' . $item->ID,
                     'title' => esc_attr($item->post_title),
                     'href' => esc_url(get_edit_post_link($item->ID)),
-                    'parent' => $this->node_id,
+                    'parent' => $parent,
                     'meta' => array(
                         'class' => $this->node_id . '-class',
                         'title' => 'Edit ' . esc_attr($item->post_title),
@@ -270,6 +301,7 @@ class Ext_Post_Menus {
                 $wp_admin_bar->add_node($args);
             endif;
         endforeach;
+        return $this->node_id;
     }
 
 }
