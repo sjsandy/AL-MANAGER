@@ -28,6 +28,7 @@ class Ext_Menubars {
 
 
 class Ext_Post_Menus {
+    
 
     private $items = 10,
             $node_parent=false,
