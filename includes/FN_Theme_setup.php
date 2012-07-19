@@ -21,7 +21,8 @@ class FN_Theme_Setup {
      *
      */
     public static function factory() {
-        return new FN_Theme_Setup();
+        $factory = new FN_Theme_Setup();
+        return $factory;
     }
 
     private $post_titles = array('Home', 'About', 'Contact Us'),
@@ -205,6 +206,14 @@ class FN_Pages_Setup extends FN_Theme_Setup {
             endif;
 
         endforeach;
+    }
+
+      /**
+     * resets the home page options
+     */
+    public static function default_home_page_option(){
+        update_option('show_on_front', 'posts');
+        update_option('page_on_front', '0');
     }
 
 }
