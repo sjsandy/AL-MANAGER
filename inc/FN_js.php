@@ -47,7 +47,9 @@ abstract class FN_js {
 }
 
 
-
+/**
+ * Masonry class.
+ */
 class FN_masonry extends FN_js {
 
     private $container_id = 'masonry',
@@ -115,7 +117,55 @@ class FN_masonry extends FN_js {
     }
 
     public function head_scripts() {
+        return false;
+    }
+
+}
+
+
+class FN_curtains extends FN_js {
+
+
+    public function __construct() {
+
+    }
+
+    public static function factory(){
+        $factory = new FN_curtains();
+        return $factory;
+    }
+
+    public function enqueue_scripts() {
+
+        wp_register_script('curtains_js', $this->locate_in_library('curtain.js', 'curtains'), array('jquery'));
+        if (!is_admin())
+            wp_enqueue_script('curtains_js');
+        wp_register_style('curtains-css', $this->locate_in_library('curtain.css', 'curtains'));
+        wp_enqueue_style('curtains-css');
+
+    }
+
+    public function footer_scripts() {
+        ?>
+             <!-- Once the page is loaded, initalize the plug-in. -->
+             <script type="text/javascript">
+                 jQuery.noConflict();
+
+                 jQuery(function(){
+                     jQuery('.curtains').curtain({
+                         scrollSpeed: 450,
+                         controls: '.menu',
+                         curtainLinks: '.curtain-links'
+                     });
+                 });
+             </script>
+        <?php
+    }
+
+    public function head_scripts() {
+        return false;
 
     }
 
 }
+
