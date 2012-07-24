@@ -273,9 +273,10 @@ class cts_orders {
     }
 
     public function order_info() {
-         //add_action('add_meta_boxes',array($this,'order_items'));
-         add_action('save_post',array($this,'save_post'));
-         add_action('admin_init', array($this, '_order_info'));
+         add_action('add_meta_boxes',array($this,'order_items'));
+        add_action('save_post',array($this,'save_post'));
+       add_action('admin_init', array($this, '_order_info'));
+
     }
 
 
@@ -288,18 +289,11 @@ class cts_orders {
     public function order_items_metabox() {
 
         ob_start();
-        wp_nonce_field(plugin_basename(__FILE__), 'cts_orders_nonce');
+        wp_nonce_field(plugin_basename(__FILE__.'nonce'), 'cts_orders_nonce');
         ?>
-                <h2>Items / Products Ordered</h2>
-                <p>Description</p>
-                <h2>Add items/products</h2>
-                <div>
-                    <select name="cts_order_item">
-                                <option>Test</option>
-                                <option>test 2</option>
-                                <option>test 3</option>
-                            </select>
-                </div>
+                <h2>Current Order</h2>
+                <p>Description....</p>
+
 
         <?php
         echo ob_get_clean();
@@ -318,6 +312,7 @@ class cts_orders {
         if (!class_exists('RW_Meta_Box'))
             return;
         $prefix = '_cts_orders_';
+         
         $meta_boxes[] = array(
             // Meta box id, UNIQUE per meta box
             'id' => 'cts_orders_meta',
