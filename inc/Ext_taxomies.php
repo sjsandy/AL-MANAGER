@@ -15,11 +15,10 @@ class Ext_taxonomies {
     private $query_var = true;
     private $show_tagcloud = true;
     private $show_in_nav_menus = true;
-    private $rewrite = array('slug'=>'name');
-
+    private $rewrite = array('slug' => 'name');
     private $taxonomy_name, $label_name;
     private $post_types = array('post', 'pages'),
-    $singular_name = null;
+            $singular_name = null;
 
     public function set_singular_name($singular_name) {
         $this->singular_name = $singular_name;
@@ -132,7 +131,7 @@ class Ext_taxonomies {
             'parent_item_colon' => __('Parent '.$label.':'),
             'edit_item' => __('Edit '.$singular),
             'update_item' => __('Update '.$singular),
-            'add_new_item' => __('Add New '.$singular),
+            'add_new_item' => __('Add New '.$label),
             'new_item_name' => __('New '.$singular),
             'menu_name' => __($label),
         );
