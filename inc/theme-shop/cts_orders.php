@@ -41,30 +41,105 @@ class cts_orders {
     public function order_info() {
         //add_action('add_meta_boxes', array($this, 'order_items'));
         //add_action('save_post', array($this, 'save_post'));
-        add_action('admin_init', array($this, '_order_info'));
+        add_action('admin_init', array($this, 'order_summary'));
         add_action('add_meta_boxes', array($this, 'change_defaults_labels'), 10);
+        //**************************************************
+
+        add_action('load-post.php', array($this, 'edit_post_screens'));
+        add_action('load-post-new.php', array($this, 'new_post_screens'));
+
+        //**************************************************
+
+        add_action('load-post.php', array($this, 'post_screens'));
+        add_action('load-post-new.php', array($this, 'post_screens'));
     }
 
-    public function order_items() {
-        add_meta_box('cts_order_items', "Order Items", array($this, 'order_items_metabox'), $this->post_type->get_post_type_name(), 'normal', 'high');
+
+    public function new_post_screens(){
+        $this->order_info();
     }
 
-    public function order_items_metabox() {
+    public function edit_post_screens() {
 
-        ob_start();
-        wp_nonce_field(plugin_basename(__FILE__ . 'nonce'), 'cts_orders_nonce');
-        ?>
-        <h2>Current Order</h2>
-        <p>Description....</p>
-
-
-        <?php
-        echo ob_get_clean();
     }
+
+    public function post_screens(){
+
+    }
+
 
     public function save_post($post_id) {
         if (defined('DOING_AUTOSAVE') AND DOING_AUTOSAVE)
             return;
+    }
+
+    public function order_summary(){
+
+        if (!class_exists('RW_Meta_Box'))
+            return;
+        $prefix = '_cts_orders_';
+
+        $meta_boxes[] = array(
+            // Meta box id, UNIQUE per meta box
+            'id' => 'cts_orders_meta',
+            // Meta box title - Will appear at the drag and drop handle bar
+            'title' => 'Orders Info',
+            // Post types, accept custom post types as well - DEFAULT is array('post'); (optional)
+            'pages' => array($this->post_type->get_post_type_name()),
+            // Where the meta box appear: normal (default), advanced, side; optional
+            'context' => 'normal',
+            // Order of meta box: high (default), low; optional
+            'piority' => 'high',
+            'fields' => array(
+                // TEXTAREA
+                array(
+                    'name' => 'Order Summary',
+                    'desc' => "Orders summary and details",
+                    'id' => "{$prefix}summary",
+                    'type' => 'textarea',
+                    'std' => "",
+                    'cols' => '40',
+                    'rows' => '20',
+                ),
+                // SELECT BOX
+                array(
+                    'name' => 'Order Status',
+                    'id' => "{$prefix}status",
+                    'type' => 'select',
+                    // Array of 'key' => 'value' pairs for select box
+                    'options' => array(
+                        'processing' => 'In Processing',
+                        'deleyed' => 'Delayed',
+                        'shipped' => 'Shipped',
+                        'delivered' => 'Delivered',
+                        'cancelled' => 'Cancelled'
+                    ),
+                    // Select multiple values, optional. Default is false.
+                    'multiple' => false,
+                    // Default value, can be string (single value) or array (for both single and multiple values)
+                    'std' => array('processing'),
+                    'desc' => 'Select the order status.',
+                ),
+                // TEXT
+                array(
+                    // Field name - Will be used as label
+                    'name' => 'Customer',
+                    // Field ID, i.e. the meta key
+                    'id' => $prefix . 'customer',
+                    // Field description (optional)
+                    'desc' => 'Customer',
+                    // CLONES: Add to make the field cloneable (i.e. have multiple value)
+                    //'clone' => true,
+                    'type' => 'text',
+                    // Default value (optional)
+                    'std' => '',
+                ),
+                ));
+
+        foreach ($meta_boxes as $meta_box) {
+            new RW_Meta_Box($meta_box);
+        }
+
     }
 
     public function _order_info() {

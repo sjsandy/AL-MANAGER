@@ -5,17 +5,22 @@
  * and open the template in the editor.
  */
 
+global $post, $post_id;
+
+$email = get_post_meta($post_id, '_nonce-test', true);
+
+
+  wp_nonce_field('items_nonce_action', 'items_nonce_name');
 ?>
+<p>
+    Customer :
+</p>
+<p>
+    Email : <?php echo $email ?>
+</p>
 <p>
 <?php
 
-global $post, $post_id;
-
-echo get_post_meta($post_id, '_nonce-test', true);
-
-echo $post_id . ' - ' . $post->ID;
-
-  wp_nonce_field('items_nonce_action', 'items_nonce_name');
 
 
 ?>
