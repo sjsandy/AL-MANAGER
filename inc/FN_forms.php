@@ -149,7 +149,7 @@ class FN_forms {
      * @param type $pattern
      * @return type
      */
-    public function text_input($name, $value = '', $placeholder = '', $required = null, $pattern = null) {
+    public function text_input($name, $value = '', $required = null, $placeholder = '', $pattern = null) {
         $array['type'] = "text";
         $array['name'] = $name;
         $array['value'] = $value;
@@ -159,7 +159,7 @@ class FN_forms {
         return $this->setText($array);
     }
 
-    public function email_input($name, $value = '', $placeholder = 'Your Email Address', $required = true, $pattern = null) {
+    public function email_input($name, $value = '', $required = null, $placeholder = 'Your Email Address', $pattern = null) {
         $array['type'] = "email";
         $array['name'] = $name;
         $array['value'] = $value;
@@ -169,7 +169,7 @@ class FN_forms {
         return $this->setText($array);
     }
 
-    public function tel_input($name, $value = '', $placeholder = 'Telphone Number 000-000-0000', $required = false, $pattern = null) {
+    public function tel_input($name, $value = '', $required = null, $placeholder = 'Telphone Number 000-000-0000', $pattern = null) {
         $array['type'] = "tel";
         $array['name'] = $name;
         $array['value'] = $value;
@@ -179,7 +179,7 @@ class FN_forms {
         return $this->setText($array);
     }
 
-    public function url_input($name, $value = '', $placeholder = '(http:// yoururl.com)', $required = null) {
+    public function url_input($name, $value = '', $required = null, $placeholder = '(http:// yoururl.com)') {
         $array['type'] = "url";
         $array['name'] = $name;
         $array['value'] = $value;

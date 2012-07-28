@@ -1,12 +1,10 @@
 <?php
 
-
 /**
  * Description of cts_orders
  *
  * @author studio
  */
-
 class cts_orders {
 
     private $post_type;
@@ -17,6 +15,7 @@ class cts_orders {
 
     public static function factory() {
         $factory = new cts_orders();
+
         return $factory;
     }
 
@@ -40,9 +39,10 @@ class cts_orders {
     }
 
     public function order_info() {
-        add_action('add_meta_boxes', array($this, 'order_items'));
-        add_action('save_post', array($this, 'save_post'));
+        //add_action('add_meta_boxes', array($this, 'order_items'));
+        //add_action('save_post', array($this, 'save_post'));
         add_action('admin_init', array($this, '_order_info'));
+        add_action('add_meta_boxes', array($this, 'change_defaults_labels'), 10);
     }
 
     public function order_items() {
@@ -140,7 +140,7 @@ class cts_orders {
             // Where the meta box appear: normal (default), advanced, side; optional
             'context' => 'side',
             // Order of meta box: high (default), low; optional
-            'piority' => 'high',
+            'piority' => 'low',
             'fields' => array(
                 // TEXT
                 array(
@@ -258,7 +258,7 @@ class cts_orders {
             // Where the meta box appear: normal (default), advanced, side; optional
             'context' => 'side',
             // Order of meta box: high (default), low; optional
-            'piority' => 'high',
+            'piority' => 'low',
             'fields' => array(
                 // TEXT
                 array(
@@ -359,9 +359,22 @@ class cts_orders {
 
 
 
+
+
         foreach ($meta_boxes as $meta_box) {
             new RW_Meta_Box($meta_box);
         }
+    }
+
+    public function change_defaults_labels($post) {
+        global $wp_meta_boxes;
+        //remove_meta_box('authordiv', 'cts_cart', 'normal');
+
+        //unset($wp_meta_boxes[$this->post_type->get_post_type_name()]['normal']['core']['postexcerpt']);
+        unset($wp_meta_boxes[$this->post_type->get_post_type_name()]['normal']['core']['submitdiv']);
+
+
+        add_meta_box('submitdiv', 'Save Order', 'post_submit_meta_box', $this->post_type->get_post_type_name(), 'side', 'high');
     }
 
 }

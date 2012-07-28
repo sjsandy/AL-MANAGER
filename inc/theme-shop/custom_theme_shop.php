@@ -10,14 +10,30 @@ class custom_theme_shop {
     public function __construct() {
 
         add_action('admin_menu', array($this, 'admin_init'));
+        add_action('admin_init', array($this,'scripts'));
+    }
+
+
+    public function scripts() {
+
+        wp_register_script('bootstrap-js', FN_core::locate_in_vendor('bootstrap/js/bootstrap.min.js'), null);
+        wp_register_style('bootstrap-style', FN_core::locate_in_vendor('bootstrap/css/bootstrap.min.css'));
+        wp_register_style('bootstrap-responsive', FN_core::locate_in_vendor('bootstrap/css/bootstrap-responsive.min.css'));
+        wp_enqueue_script('bootstrap-js');
+        wp_enqueue_style('bootstrap-style');
+        wp_enqueue_style('bootstrap-responsive');
+
+
     }
 
     public static function factory() {
+
         $factory = new custom_theme_shop();
         return $factory;
     }
 
     public function admin_init() {
+
         add_menu_page('CTS_Shop', 'ThemeShop', 'manage_options', 'customshop', array($this, 'shop_menu'), plugins_url('images/suppliers.png', __FILE__), '10.5');
 
         add_submenu_page('customshop', 'Settings', 'Manage Settings', 'manage_options', 'cts_settings', array($this, 'cts_settings'));
@@ -41,7 +57,7 @@ class custom_theme_shop {
 
 
 
-class cts_meta_box {
+class cts_meta_boxes {
 
 //add_meta_box($id, $title, $callback, $screen, $context, $priority)
 
@@ -58,11 +74,10 @@ class cts_meta_box {
       cts_meta_box::factory()->include_page(meta-page.page)->id(box_id)->set_title(box_title)
       ->set_screen('side')->set_context(normal)->piority(low);
       </code>
-     * @return \cts_meta_box
-     */
+     * @return \ccts_meta_boxes     */
     public static function factory() {
 
-        $factory = new cts_meta_box();
+        $factory = new cts_meta_boxes();
         return $factory;
     }
 
@@ -111,10 +126,10 @@ class cts_meta_box {
         add_meta_box($this->id, $this->title, array($this, 'create'), $this->screen, $this->context, $this->piority);
     }
 
-    public function create() {
+    public function create($post) {
 
         if (!isset($this->include_page) OR !file_exists($this->include_page)) {
-            echo "File not found";
+            echo "File Error";
             return;
         }
 

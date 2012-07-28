@@ -5,7 +5,8 @@
  *
  * @author Studio365
  */
-define('AL_DIR', dirname(__FILE__)  . '/');
+define('AL_DIR', dirname(__FILE__));
+define('AL_URL',  plugins_url().'/al-manager');
 
 
 
@@ -112,7 +113,7 @@ class al_manager {
         return $this;
     }
 
-    public function del_class_folder($folder = null){
+    public function del_class_folder($folder_name = null){
         if(isset($folder)):
             if($opts = get_option('ALM_class_folders')):
                 foreach ($opts as $key => $value) {

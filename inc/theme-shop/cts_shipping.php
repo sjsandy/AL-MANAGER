@@ -28,7 +28,7 @@ class cts_shipping {
                 ->set_capability_type('post')
                 ->set_show_in_menu('customshop')
                 ->set_public(false)
-                ->set_show_ui(true)
+                ->set_show_ui(false)
                 ->set_show_in_nav_menus(false)
                 ->set_menu_title("Manage Shipping")
                 ->set_rewrite(array('slug' => 'order'))
