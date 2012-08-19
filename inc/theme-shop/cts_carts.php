@@ -162,7 +162,7 @@ class cts_shopping_items{
                 ->set_capability_type('page')
                 ->set_show_in_menu('customshop')
                 ->set_public(false)
-                ->set_show_ui(true)
+                ->set_show_ui(false)
                 ->set_show_in_nav_menus(false)
                 ->set_menu_title("Shopping Items")
                 ->set_rewrite(array('slug' => 'shopping_items'))

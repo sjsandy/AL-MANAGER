@@ -68,9 +68,14 @@ class Fn_Post extends Fn_Gen {
     }
 
       public function excerpt_length($excerpt_length = 100) {
-        add_filter('excerpt_length', function($length) {
+        add_filter('excerpt_length', array($this,'excerptLength'));
+    }
+
+    public function excerptLenght(){
+
                     return $length = $excerpt_length;
-                });
+
+
     }
 
       public function pagination() {
@@ -107,8 +112,9 @@ class Fn_Images extends Fn_Gen {
     }
 
 
-    public static function load() {
-        return new FN_image();
+    public static function factory() {
+        $factory = new Fn_Images();
+        return $factory;
     }
 
     /**
@@ -116,22 +122,14 @@ class Fn_Images extends Fn_Gen {
      * @param init $quality set  the WP jpeg image quality default 100
      * @return type
      */
-    public function image_compression($quality = 100) {
-        add_filter('jpeg_quality', function($arg) {
-                    return $quality;
-                });
-        return $this->image_quality = $quality;
-    }
+//    public function image_compression($quality = 100) {
+//        add_filter('jpeg_quality', function($arg) {
+//                    return $quality;
+//                });
+//        return $this->image_quality = $quality;
+//    }
 
-    /**
-     *
-     */
-    public function img_figure() {
-        add_filter('the_content', function($content) {
-                    //return preg_replace('/<img (.*) \/>\s*/iU', '' . $before . '<img \1 />' . $after . '', $content);
-                    return preg_replace('/<p>\\s*?(<a .*?><img.*?><\\/a>|<img.*?>)?\\s*<\\/p>/s', '<figure>$1</figure>', $content);
-                }, 30);
-    }
+
 
     /**
      * Removes images width and heights attrs great for fluid images
@@ -154,7 +152,7 @@ class Fn_Images extends Fn_Gen {
                             jQuery.noConflict();
                             jQuery(document).ready(function($){
 
-                                $("<?php echo $id ?>img").each(function(){
+                                $("<?php echo $id ?> img").each(function(){
                                     $(this).removeAttr('width')
                                     $(this).removeAttr('height');
                                 });
@@ -175,7 +173,7 @@ class Fn_Admin {
 
 
     public static function load() {
-        return new FN_Admin();
+        return $factory = new FN_Admin();
     }
 
 }
