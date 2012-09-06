@@ -7,7 +7,6 @@
  * @link http://shawnsandy.com
  */
 
-
 /**
  * Theme setup functions
  */
@@ -90,7 +89,7 @@ class FN_Theme_Setup {
  * FN_Pages_Setup::add()->set_home_page('Home Page')->set_post_status('publish')->setup();
  * </code>
  */
-class FN_Pages_Setup extends FN_Theme_Setup {
+class FN_Setup_Pages extends FN_Theme_Setup {
 
     public function __construct() {
         parent::__construct();
@@ -98,7 +97,7 @@ class FN_Pages_Setup extends FN_Theme_Setup {
     }
 
     public function add() {
-        return $factory = new FN_Pages_Setup();
+        return $factory = new FN_Setup_Pages();
     }
 
     /**
@@ -107,7 +106,7 @@ class FN_Pages_Setup extends FN_Theme_Setup {
      * Page name convetions (all lowercase / spaces converted to ' - ' ) @example Contact Us (Page Title) > contact-us.php (template name)
      * @param aray $title_array - array('Home Page', 'About', 'Contact')
      */
-    public function setup($title_array = array('Home Page', 'About', 'Contact','Offline')) {
+    public function setup($title_array = array('Home Page', 'About', 'Contact', 'Offline')) {
 
         //$theme_page = $this->theme_page();
         // @source roots theme framework (modified)
@@ -132,12 +131,11 @@ class FN_Pages_Setup extends FN_Theme_Setup {
                 'post_content' => $this->get_post_content(),
                 'post_status' => $this->get_post_status(),
                 'post_type' => $this->get_post_type(),
-                //'post_parent' => $theme_page
+                    //'post_parent' => $theme_page
             );
 
             // insert the post into the database
             $result = wp_insert_post($add_default_pages);
-
         }
 
 // set the theme default home page if home page is set
@@ -163,7 +161,7 @@ class FN_Pages_Setup extends FN_Theme_Setup {
      * Add Theme page Parent and return the ID
      * @return type
      */
-    public function theme_page($parent_title='Theme Pages') {
+    public function theme_page($parent_title = 'Theme Pages') {
         $themepage = get_page_by_title($parent_title);
 
         if (isset($themepage->ID)):
@@ -181,7 +179,6 @@ class FN_Pages_Setup extends FN_Theme_Setup {
         endif;
 
         return $theme_page;
-
     }
 
     /**
@@ -197,11 +194,10 @@ class FN_Pages_Setup extends FN_Theme_Setup {
             $title = get_page_by_title($titles);
 
             if (isset($title->ID)):
-                //find page templates and set update the page templates
-                //$tpl = strtolower(str_replace(' ', '-', $titles));
-                $tpl = strtolower(sanitize_title_with_dashes($titles));
-                //$tpl = strtolower($tpl);
+                //$tpl = strtolower(sanitize_title_with_dashes($titles));
+                $tpl = $title->post_name;
                 $tpl_file = $tpl . ".php";
+                //find page templates and set update the page templates
                 if (file_exists(get_template_directory() . '/' . $tpl_file)):
                     update_post_meta($title->ID, '_wp_page_template', $tpl_file);
                 endif;
@@ -210,17 +206,17 @@ class FN_Pages_Setup extends FN_Theme_Setup {
         endforeach;
     }
 
-      /**
+    /**
      * resets the home page options
      */
-    public static function default_home_page_option(){
+    public static function default_home_page_option() {
         update_option('show_on_front', 'posts');
         update_option('page_on_front', '0');
     }
 
 }
 
-class FN_Sidebars {
+class FN_Setup_Sidebars {
 
     private function __construct() {
 
@@ -255,3 +251,89 @@ class FN_Sidebars {
 
 }
 
+/**
+ * Create and setup a primary menu on theme activation
+ */
+class FN_Setup_Menus {
+
+    private $location = 'primary',
+            $menu = 'primary';
+
+    public function set_location($location) {
+        $this->location = $location;
+        return $this;
+    }
+
+    public function set_menu($menu) {
+        $this->menu = $menu;
+        return $this ;
+    }
+
+
+    public function __construct() {
+
+    }
+
+    public static function factory() {
+
+        return $factory = new FN_Setup_Menus();
+    }
+
+    public function add_menu($pages = array('About', 'Contact')) {
+
+        //register_nav_menu($this->location, __('Primary Menu'));
+        //check to see if the primary menu has a location assigned
+        if (!is_nav_menu($this->menu)) {
+            //assign the menu and get the id
+            $menu_id = wp_create_nav_menu(ucfirst($this->menu));
+            // set our new MENU up at our theme's nav menu location
+            $locations[$this->location] = $menu_id;
+            set_theme_mod('nav_menu_locations', $locations);
+
+
+            //Create a home menu item
+            $menu_home = array(
+                'menu-item-type' => 'custom',
+                'menu-item-url' => get_home_url('/'),
+                'menu-item-title' => 'Home',
+                'menu-item-attr-title' => 'Home',
+                'menu-item-status' => 'publish'
+            );
+            wp_update_nav_menu_item($menu_id, 0, $menu_home);
+
+            if (is_array($pages) AND !empty($pages)):
+                //loop pages
+                foreach ($pages as $_page):
+                    //get the page
+                    $page = get_page_by_title($_page);
+                    //if page exist add to menu
+                    if (isset($page->ID)):
+                        $menu = array(
+                            'menu-item-object-id' => $page->ID,
+                            'menu-item-parent-id' => 0,
+                            'menu-item-position' => 0,
+                            'menu-item-object' => 'page',
+                            'menu-item-type' => 'post_type',
+                            'menu-item-status' => 'publish');
+                        wp_update_nav_menu_item($menu_id, 0, $menu);
+                    endif;
+                endforeach;
+            endif;
+
+            //assign menu location
+            //set_theme_mod('nav_menu_locations', array($this->location => $menu_id,));
+//            $locations = get_theme_mod('nav_menu_locations');
+//            $locations['nav_menu_locations'][$this->location] = $menu_id;
+//            set_theme_mod('nav_menu_locations', $locations);
+        }
+    }
+
+    public static function set_menu_location($menu_id = 'primary',$location = 'primary') {
+        if (!has_nav_menu($menu_id) AND is_nav_menu($menu_id)) {
+            $menu = wp_get_nav_menu_object($menu_id);
+            $locations["{$location}"] = $menu->term_id;
+            set_theme_mod('nav_menu_locations', $locations);
+        }
+    }
+
+}

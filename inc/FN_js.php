@@ -332,6 +332,7 @@ class FN_js_flex_slider extends FN_js {
 
 /**
  * @link http://jobyj.in/adipoli
+* Adipoli is a simple jQuery plugin used to bring stylish image hover effects.
  */
 class FN_js_adipoli extends FN_js {
 
