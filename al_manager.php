@@ -5,7 +5,8 @@
  *
  * @author Studio365
  */
-define('AL_DIR', dirname(__FILE__)  . '/');
+define('AL_DIR', dirname(__FILE__));
+define('AL_URL', plugins_url() . '/al-manager');
 
 
 
@@ -23,17 +24,15 @@ class al_manager {
         //$this->autoload();
     }
 
-
     /**
      *
      * @return type
      */
-    public static function  instance(){
-         if (!isset(self::$instance)) {
+    public static function instance() {
+        if (!isset(self::$instance)) {
             self::$instance = new al_manager();
         }
         return self::$instance;
-
     }
 
     /**
@@ -69,17 +68,18 @@ class al_manager {
         //default folder
         //*******THEME VENDOR DIRECTORY********
         $folders[] = AL_DIR . '/includes/';
-        if(file_exists(get_stylesheet_directory() . '/vendor/'))
-        $folders[] = get_stylesheet_directory() . '/vendor/';
-        if(file_exists(get_template_directory() . '/vendor/'))
-        $folders[] = get_template_directory() . '/vendor/';
+        $folders[] = WP_PLUGIN_DIR . '/al-manager/vendor/';
+        if (file_exists(get_stylesheet_directory() . '/vendor/'))
+            $folders[] = get_stylesheet_directory() . '/vendor/';
+        if (file_exists(get_template_directory() . '/vendor/'))
+            $folders[] = get_template_directory() . '/vendor/';
         //*******WP_CONTENT VENDOR DIRECTORY********
-        if(file_exists(WP_CONTENT_DIR . '/vendor/'))
-        $folders[] = WP_CONTENT_DIR . '/vendor/';
+        if (file_exists(WP_CONTENT_DIR . '/vendor/'))
+            $folders[] = WP_CONTENT_DIR . '/vendor/';
         //add the filter
         $_folders = $this->get_class_folders();
 
-        if(is_array($_folders))
+        if (is_array($_folders))
             $folders = array_merge($_folders, $folders);
 
         // add Folder paths stored in the folder array
@@ -88,11 +88,11 @@ class al_manager {
 //        endforeach;
 //        $autoloadManager->register();
 
-        $this->add_classes(AL_DIR.'/autoload.php', $folders);
+        $this->add_classes(AL_DIR . '/autoload.php', $folders);
         return $this;
     }
 
-    public function get_class_folders(){
+    public function get_class_folders() {
         $folders = get_option('ALM_class_folders');
         return is_array($folders) ? $folders : array();
     }
@@ -101,22 +101,23 @@ class al_manager {
      *
      * @param array $folder
      */
-    public function add_class_folder($folder = null){
+    public function add_class_folder($folder = null) {
         $fl = $this->get_class_folders();
-        if(!file_exists($folder)) return $this;
-        if(!in_array($folder, $fl)):
-        $addfl = array_merge($fl,array($folder));
-        update_option('ALM_class_folders', $addfl);
+        if (!file_exists($folder))
+            return $this;
+        if (!in_array($folder, $fl)):
+            $addfl = array_merge($fl, array($folder));
+            update_option('ALM_class_folders', $addfl);
         endif;
 
         return $this;
     }
 
-    public function del_class_folder($folder = null){
-        if(isset($folder)):
-            if($opts = get_option('ALM_class_folders')):
+    public function del_class_folder($folder_name = null) {
+        if (isset($folder)):
+            if ($opts = get_option('ALM_class_folders')):
                 foreach ($opts as $key => $value) {
-                    if($value == $folder):
+                    if ($value == $folder):
                         unset($opts[$key]);
                     endif;
                 }
@@ -125,20 +126,16 @@ class al_manager {
         endif;
     }
 
-
-    public function clean_options(){
+    public function clean_options() {
         $opts = $this->get_class_folders();
         foreach ($opts as $key => $value) {
-            if(!file_exists($value)):
-            $this->del_class_folder($value);
+            if (!file_exists($value)):
+                $this->del_class_folder($value);
             endif;
         }
-
     }
 
-
-
-    public function add_classes($save_to = null, $folders= array() ){
+    public function add_classes($save_to = null, $folders = array()) {
 
         $autoloadManager = new AutoloadManager();
         //sets the save path fo the file
@@ -149,45 +146,39 @@ class al_manager {
         endforeach;
 
         $autoloadManager->register();
-
     }
 
-    public function add_folders_filter(){
+    public function add_folders_filter() {
 
-        if(has_filter('alm_filter')):
-           $folders = array();
-        $_folders = apply_filters('alm_filter', $folders);
-         //check if is array / not empty
-        if(empty($_folders) or !is_array($_folders)) return false;
-
-        foreach ($_folders as $value) {
-            $this->add_class_folder($value);
-        }
-         return $this;
-        endif;
-
-
-
-    }
-
-    public function del_folders_filter(){
-
-        if(has_filter('del_alm_filter')):
+        if (has_filter('alm_filter')):
             $folders = array();
-        $_folders = apply_filters('del_alm_filter', $folders);
-         //check if is array / not empty
-        if(empty($_folders) or !is_array($_folders)) return false;
+            $_folders = apply_filters('alm_filter', $folders);
+            //check if is array / not empty
+            if (empty($_folders) or !is_array($_folders))
+                return false;
 
-        foreach ($_folders as $value) {
-            $this->del_class_folder($value);
-        }
-        return $this;
+            foreach ($_folders as $value) {
+                $this->add_class_folder($value);
+            }
+            return $this;
         endif;
-
-
     }
 
+    public function del_folders_filter() {
 
+        if (has_filter('del_alm_filter')):
+            $folders = array();
+            $_folders = apply_filters('del_alm_filter', $folders);
+            //check if is array / not empty
+            if (empty($_folders) or !is_array($_folders))
+                return false;
+
+            foreach ($_folders as $value) {
+                $this->del_class_folder($value);
+            }
+            return $this;
+        endif;
+    }
 
     /**
      * use to add your custom classes please create the custom
@@ -196,25 +187,32 @@ class al_manager {
         add_filter('alm_filter', array('al_manager', 'custom'));
     }
 
-
     public function custom($folders) {
         $dir = array(AL_DIR . '/custom/');
-                 $folders = array_merge($dir, $folders);
+        $folders = array_merge($dir, $folders);
         return $folders;
     }
 
-    public static function add_libraries(){
+    public static function add_libraries() {
         add_filter('alm_filter', array('al_manager', 'libraries'));
     }
 
-    public function libraries($folders){
+    public function libraries($folders) {
         $dir = array(AL_DIR . '/library/');
         $folders = array_merge($dir, $folders);
         return $folders;
     }
 
-
-
+    public static function add_vendors() {
+        //sample fliter adds 'inc' dir to the autoload paths
+        $vendors = array(
+            WP_CONTENT_DIR . '/vendor/',
+            WP_PLUGIN_DIR . '/al-manager/vendor/',
+        );
+        $p = array(WP_PLUGIN_DIR . '/al-manager/inc/', WP_PLUGIN_DIR . '/al-manager/vendor/');
+        $folders = array_merge($vendors, $folders);
+        return $folders;
+    }
 
 }
 

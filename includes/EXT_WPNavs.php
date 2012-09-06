@@ -136,7 +136,7 @@ class Ext_WPNavs {
      * @return \EXT_WPNavs
      */
     public function add(){
-        return new EXT_WPNavs();
+        return $factory = new EXT_WPNavs();
     }
 
     /**
@@ -275,4 +275,6 @@ class nav_walker extends Walker_Nav_Menu {
     }
 
 }
+
+
 

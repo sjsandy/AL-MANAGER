@@ -6,14 +6,11 @@
  */
 
 /**
- * Description of wp_github_updater
+ * Description of Mod_themes
  *
  * @author studio
  */
-
-include_once WP_PLUGIN_DIR.'/al-manager/includes/updater.php';
-
-class wp_github_updater {
+abstract class Mod_themes {
 
     public function __construct() {
 
@@ -21,4 +18,3 @@ class wp_github_updater {
 
 }
 
-?>
