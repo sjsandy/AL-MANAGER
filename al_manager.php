@@ -68,6 +68,7 @@ class al_manager {
         //default folder
         //*******THEME VENDOR DIRECTORY********
         $folders[] = AL_DIR . '/includes/';
+        $folders[] = WP_PLUGIN_DIR . '/al-manager/vendor/';
         if (file_exists(get_stylesheet_directory() . '/vendor/'))
             $folders[] = get_stylesheet_directory() . '/vendor/';
         if (file_exists(get_template_directory() . '/vendor/'))
@@ -205,13 +206,11 @@ class al_manager {
     public static function add_vendors() {
         //sample fliter adds 'inc' dir to the autoload paths
         $vendors = array(
-            get_stylesheet_directory() . '/vendor/',
-            get_template_directory() . '/vendor/',
             WP_CONTENT_DIR . '/vendor/',
             WP_PLUGIN_DIR . '/al-manager/vendor/',
         );
         $p = array(WP_PLUGIN_DIR . '/al-manager/inc/', WP_PLUGIN_DIR . '/al-manager/vendor/');
-        $folders = array_merge($p, $folders);
+        $folders = array_merge($vendors, $folders);
         return $folders;
     }
 
