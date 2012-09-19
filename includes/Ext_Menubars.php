@@ -28,7 +28,7 @@ class Ext_Menubars {
 
 
 class Ext_Post_Menus {
-    
+
 
     private $items = 10,
             $node_parent=false,
@@ -123,8 +123,8 @@ class Ext_Post_Menus {
      * @return Post_Menus method (chainable);
      */
     public static function add() {
-        $class = __CLASS__;
-        $factory = new $class;
+        //$class = __CLASS__;
+        $factory = new Ext_Post_Menus();
         return $factory;
     }
 
@@ -153,7 +153,7 @@ class Ext_Post_Menus {
     public function drafts($post_type = 'post', $items = 10) {
         $this->post_type = $post_type;
         $this->items = $items;
-        $this->post_status = 'drafts';
+        $this->post_status = 'draft';
         $this->add_nodes($this->node_id, $this->node_title);
     }
 
@@ -239,7 +239,7 @@ class Ext_Post_Menus {
      */
     public function nodes($wp_admin_bar) {
 
-
+ //@todo fix node title seperate from meta > title
 
         //** parent node **//
         $parent = $this->node_parent ? $this->node_parent : $this->node_id ;

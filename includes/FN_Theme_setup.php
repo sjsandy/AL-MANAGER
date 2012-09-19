@@ -106,7 +106,7 @@ class FN_Setup_Pages extends FN_Theme_Setup {
      * Page name convetions (all lowercase / spaces converted to ' - ' ) @example Contact Us (Page Title) > contact-us.php (template name)
      * @param aray $title_array - array('Home Page', 'About', 'Contact')
      */
-    public function setup($title_array = array('Home Page', 'About', 'Contact', 'Offline')) {
+    public function setup($title_array = array('Home Page', 'About', 'Contact')) {
 
         //$theme_page = $this->theme_page();
         // @source roots theme framework (modified)
@@ -155,6 +155,7 @@ class FN_Setup_Pages extends FN_Theme_Setup {
         endif;
 
         $this->get_page_templates($title_array);
+        return $this;
     }
 
     /**

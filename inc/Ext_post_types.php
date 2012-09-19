@@ -51,7 +51,6 @@ class Ext_post_type {
         $this->prefix = $prefix;
     }
 
-
     public function set_show_in_nav_menus($show_in_nav_menus) {
         $this->show_in_nav_menus = $show_in_nav_menus;
         return $this;
@@ -109,7 +108,7 @@ class Ext_post_type {
     }
 
     public function get_post_type_name() {
-        return $this->prefix.'_'.$this->post_type_name;
+        return $this->prefix . '_' . $this->post_type_name;
     }
 
     public function set_post_type_name($post_type_name) {
@@ -269,7 +268,7 @@ class Ext_post_type {
      * @param type $name post type name
      *
      */
-    public function __construct($name = 'article',$prefix='ext') {
+    public function __construct($name = 'article', $prefix = 'ext') {
         //$this->post_type_name = "cwp_{$name}";
         $this->set_post_type_name($name);
         $this->set_menu_title(ucfirst($name));
@@ -448,6 +447,60 @@ You can also edit multiple Articles at once. Select the Articles you want to edi
 ';
         }
         return $contextual_help;
+    }
+
+
+
+}
+
+
+
+class Replace_Title_Here {
+
+    private $post_type,
+            $new_title;
+
+    public function set_post_type($post_type) {
+        $this->post_type = $post_type;
+        return $this;
+    }
+
+    public function set_new_title($new_title) {
+        $this->new_title = $new_title;
+        return $this;
+    }
+
+    function __construct() {
+
+    }
+
+    /**
+     *
+     * @param string $new_title
+     * @param string $post_type
+     * @return \Replace_Title_Here
+     */
+    public static function replace($new_title = 'Enter Your Post Title Here',$post_type= 'post'){
+
+        $factory = new Replace_Title_Here();
+        $factory->set_new_title($new_title);
+        $factory->set_post_type($post_type);
+        $factory->change_editor_title();
+        return $factory;
+
+    }
+
+
+    function change_default_title($title) {
+        $screen = get_current_screen();
+        if ($this->post_type == $screen->post_type) {
+            $title = $this->new_title;
+        }
+        return $title;
+    }
+
+    public function change_editor_title() {
+        add_filter('enter_title_here', array($this, 'change_default_title'));
     }
 
 }
