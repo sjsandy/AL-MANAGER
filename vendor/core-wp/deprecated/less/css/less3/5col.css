@@ -1,0 +1,25 @@
+/*	
+
+	Less+ by Jimmy Rosén, http://www.angrycreative.se
+	Based on Less Framework 3 by Joni Korpi, http://lessframework.com
+	
+*/
+
+/*		Wide Mobile Layout: 480px.
+		Gutters: 24px.
+		Outer margins: 22px.
+		Inherits styles from: Default Layout, Mobile Layout.
+------------------------------------------------------------
+cols    1     2      3      4      5
+px      68    160    252    344    436    */
+
+
+	body {
+		width: 436px;
+		padding: 36px 22px 48px;
+	}
+
+#example {
+	height: 600px;
+	background: #F03;
+}

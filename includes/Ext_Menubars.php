@@ -123,8 +123,8 @@ class Ext_Post_Menus {
      * @return Post_Menus method (chainable);
      */
     public static function add() {
-        $class = __CLASS__;
-        $factory = new $class;
+        //$class = __CLASS__;
+        $factory = new Ext_Post_Menus();
         return $factory;
     }
 
