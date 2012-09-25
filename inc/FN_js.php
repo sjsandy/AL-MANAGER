@@ -99,15 +99,32 @@ class FN_js_masonry extends FN_js {
     }
 
     public function __construct($class_name) {
+
+        /*
+         * add masonry-page calls to the body
+         */
+        add_filter('body_class', array($this, 'masonry_page'));
         $this->set_container_name($class_name);
     }
 
     public static function factory($class_name = 'masonry'){
         $factory = new FN_js_masonry($class_name);
+        $factory->enqueue_scripts();
         return $factory;
     }
 
-    public function run_masonry($container_id = 'masonry', $item_selector = 'span4'){
+    public function masonry_page($classes){
+        $classes[] = 'masonry-page';
+        return $classes;
+    }
+
+    /**
+     * run masonr
+     * @param type $item_selector
+     * @param type $container_id
+     * @return \FN_js_masonry
+     */
+    public function run_masonry($item_selector = 'span4',$container_id = 'masonry' ){
         $this->container_id = $container_id;
         $this->item_selector = $item_selector;
         $this->run();
@@ -116,7 +133,7 @@ class FN_js_masonry extends FN_js {
     }
 
     public function enqueue_scripts() {
-        wp_register_script('masonry', $this->locate_in_library('jquery.wookmark.min.js', 'masonry'), array('jquery'));
+        wp_register_script('masonry', $this->locate_in_library('jquery.masonry.min.js', 'masonry'), array('jquery'));
         if (!is_admin()) wp_enqueue_script('masonry');
     }
 
