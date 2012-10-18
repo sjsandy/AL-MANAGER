@@ -7,8 +7,6 @@
 /**
  * INSTANIATE core classes
  */
-
-
 $cwp_core = CWP_CORE::factory();
 $cwp_classes = CWP_CLASSES::factory();
 
@@ -87,14 +85,21 @@ function cwp_theme_setup() {
 
     core_functions::favicon();
     add_theme_support('post-thumbnails');
-    add_theme_support('automatic-feed-links');
+
     add_image_size('icon-60', 60, 60, true);
     add_image_size('icon-100', 100, 100, true);
     add_image_size('icon-40', 40, 40, true);
 
-    /**
-     * default widgets
-     */
+    /* Move the WordPress generator to a better priority. */
+    remove_action('wp_head', 'wp_generator');
+    add_action('wp_head', 'wp_generator', 1);
+
+    /* Make text widgets and term descriptions shortcode aware. */
+    add_filter('widget_text', 'do_shortcode');
+    add_filter('term_description', 'do_shortcode');
+
+
+
 }
 
 add_action('widgets_init', 'cwp_widgets');
@@ -121,22 +126,27 @@ function jump_scripts() {
     /**
      * bootstrap scripts
      */
-    wp_register_script('bootstrap-alert', cwp::locate_in_library('bootstrap-alert.js', 'bootstrap/js'), array('jquery'), '', true);
-    wp_register_script('bootstrap-buttons', cwp::locate_in_library('bootstrap-button.js', 'bootstrap/js'), array('jquery'), '', true);
-    wp_register_script('bootstrap-dropdown', cwp::locate_in_library('bootstrap-dropdown.js', 'bootstrap/js'), array('jquery'), '', true);
-    wp_register_script('bootstrap-modal', cwp::locate_in_library('bootstrap-modal.js', 'bootstrap/js'), array('jquery'), '', true);
-    wp_register_script('bootstrap-popover', cwp::locate_in_library('bootstrap-popover.js', 'bootstrap/js'), array('jquery'), '', true);
-    wp_register_script('bootstrap-scrollspy', cwp::locate_in_library('bootstrap-scrollspy.js', 'bootstrap/js'), array('jquery'), '', true);
-    wp_register_script('bootstrap-tabs', cwp::locate_in_library('bootstrap-tab.js', 'bootstrap/js'), array('jquery'), '', true);
-    wp_register_script('bootstrap-twipsy', cwp::locate_in_library('bootstrap-twispy.js', 'bootstrap/js'), array('jquery'), '', true);
-    wp_register_script('bootstrap-transition', cwp::locate_in_library('bootstrap-transition.js', 'bootstrap/js'), array('jquery'), '', true);
-    wp_register_script('bootstrap-collapse', cwp::locate_in_library('bootstrap-collapse.js', 'bootstrap/js'), array('jquery'), '', true);
-    wp_register_script('bootstrap-typeahead', cwp::locate_in_library('bootstrap-typeahead.js', 'bootstrap/js'), array('jquery'), '', true);
-    wp_register_script('bootstrap-tooltip', cwp::locate_in_library('bootstrap-tooltip.js', 'bootstrap/js'), array('jquery'), '', true);
+    wp_register_script('bootstrap-js', cwp::locate_in_library('bootstrap.min.js', 'bootstrap/js'), array('jquery'), '', true);
+//    wp_register_script('bootstrap-alert', cwp::locate_in_library('bootstrap-alert.js', 'bootstrap/js'), array('jquery'), '', true);
+//    wp_register_script('bootstrap-buttons', cwp::locate_in_library('bootstrap-button.js', 'bootstrap/js'), array('jquery'), '', true);
+//    wp_register_script('bootstrap-dropdown', cwp::locate_in_library('bootstrap-dropdown.js', 'bootstrap/js'), array('jquery'), '', true);
+//    wp_register_script('bootstrap-modal', cwp::locate_in_library('bootstrap-modal.js', 'bootstrap/js'), array('jquery'), '', true);
+//    wp_register_script('bootstrap-popover', cwp::locate_in_library('bootstrap-popover.js', 'bootstrap/js'), array('jquery'), '', true);
+//    wp_register_script('bootstrap-scrollspy', cwp::locate_in_library('bootstrap-scrollspy.js', 'bootstrap/js'), array('jquery'), '', true);
+//    wp_register_script('bootstrap-tabs', cwp::locate_in_library('bootstrap-tab.js', 'bootstrap/js'), array('jquery'), '', true);
+//    wp_register_script('bootstrap-twipsy', cwp::locate_in_library('bootstrap-twispy.js', 'bootstrap/js'), array('jquery'), '', true);
+//    wp_register_script('bootstrap-transition', cwp::locate_in_library('bootstrap-transition.js', 'bootstrap/js'), array('jquery'), '', true);
+//    wp_register_script('bootstrap-collapse', cwp::locate_in_library('bootstrap-collapse.js', 'bootstrap/js'), array('jquery'), '', true);
+//    wp_register_script('bootstrap-typeahead', cwp::locate_in_library('bootstrap-typeahead.js', 'bootstrap/js'), array('jquery'), '', true);
+//    wp_register_script('bootstrap-tooltip', cwp::locate_in_library('bootstrap-tooltip.js', 'bootstrap/js'), array('jquery'), '', true);
     wp_register_script('modernizer', cwp::locate_in_library('modernizr.custom.62477.js', 'js'), null, '2.6.1', true);
     wp_register_script('placeholder', cwp::locate_in_library('jquery.placeholder.min.js', 'js'), null, '2.0.7 ', true);
     wp_register_script('fixie', cwp::locate_in_library('fixie_min.js', 'fixie'), null, '', true);
     wp_register_script('holder-js', cwp::locate_in_library('holder.js', 'js'), null, '', true);
+    wp_register_script('scroll-top', cwp::locate_in_library('jquery.scroll-top.js', 'js'), null, '', true);
+    wp_register_script('scroll-to', cwp::locate_in_library('jquery.scrollTo.min.js', 'scroll-to'), null, '', true);
+    wp_register_script('local-scroll', cwp::locate_in_library('jquery.serialScroll.min.js', 'serialScroll'), null, '', true);
+    wp_register_script('theme-js', cwp::locate_in_library('theme.js', 'js'), null, '', true);
 
 
 
@@ -149,10 +159,10 @@ function jump_scripts() {
     if (!is_admin()) {
         //cwp::jquery();
         //wp_enqueue_script('jquery');
+        wp_enqueue_script('bootstrap-js');
         wp_enqueue_script('modernizer');
-
         wp_enqueue_script('placeholder');
-        wp_enqueue_script('theme-scripts', get_template_directory_uri() . '/library/js/scripts.js', array(), false, true);
+        //wp_enqueue_script('theme-scripts', get_template_directory_uri() . '/library/js/scripts.js', array(), false, true);
     }
 }
 
@@ -219,8 +229,6 @@ function cwp_mobile_head() {
 function cwp_mobile_footer() {
     do_action('cwp_mobile_footer');
 }
-
-
 
 /**
  * Sets default permalink
@@ -308,84 +316,84 @@ if (!function_exists('_bj_comment')) :
                 ?>
                 <li class="post pingback">
                     <p><?php _e('Pingback:', 'basejump'); ?> <?php comment_author_link(); ?><?php edit_comment_link(__('(Edit)', 'basejump'), ' '); ?></p>
-                    <?php
-                    break;
-                default :
-                    ?>
+                <?php
+                break;
+            default :
+                ?>
                 <li <?php comment_class(); ?> id="li-comment-<?php comment_ID(); ?>">
                     <article id="comment-<?php comment_ID(); ?>" class="comment">
                         <footer>
                             <div class="comment-author vcard">
 
-                                <?php echo get_avatar($comment, 40); ?>
-                                <?php printf(__('%s <span class="says">says:</span>', 'basejump'), sprintf('<cite class="fn">%s</cite>', get_comment_author_link())); ?>
+                <?php echo get_avatar($comment, 40); ?>
+                <?php printf(__('%s <span class="says">says:</span>', 'basejump'), sprintf('<cite class="fn">%s</cite>', get_comment_author_link())); ?>
                             </div><!-- .comment-author .vcard -->
-                            <?php if ($comment->comment_approved == '0') : ?>
+                                <?php if ($comment->comment_approved == '0') : ?>
                                 <em><?php _e('Your comment is awaiting moderation.', 'basejump'); ?></em>
                                 <br />
                             <?php endif; ?>
 
                             <div class="comment-meta commentmetadata">
                                 <a href="<?php echo esc_url(get_comment_link($comment->comment_ID)); ?>"><time pubdate datetime="<?php comment_time('c'); ?>">
-                                        <?php
-                                        /* translators: 1: date, 2: time */
-                                        printf(__('%1$s at %2$s', 'basejump'), get_comment_date(), get_comment_time());
-                                        ?>
+                <?php
+                /* translators: 1: date, 2: time */
+                printf(__('%1$s at %2$s', 'basejump'), get_comment_date(), get_comment_time());
+                ?>
                                     </time></a>
-                                <?php edit_comment_link(__('(Edit)', 'basejump'), ' ');
-                                ?>
+                                        <?php edit_comment_link(__('(Edit)', 'basejump'), ' ');
+                                        ?>
                             </div><!-- .comment-meta .commentmetadata -->
                         </footer>
 
                         <div class="comment-content"><?php comment_text(); ?></div>
 
                         <div class="reply">
-                            <?php comment_reply_link(array_merge($args, array('depth' => $depth, 'max_depth' => $args['max_depth']))); ?>
+                <?php comment_reply_link(array_merge($args, array('depth' => $depth, 'max_depth' => $args['max_depth']))); ?>
                         </div><!-- .reply -->
                     </article><!-- #comment-## -->
 
-                    <?php
-                    break;
-            endswitch;
-        }
-
-    endif; // ends check for _s_comment()
-
-    function csf_default_menus() {
-        /**
-         * This theme uses wp_nav_menu() in one location.
-         * used in theme functions
-         */
-        // This theme styles the visual editor with editor-style.css to match the theme style.
-
-
-        add_theme_support('menus');
-        register_nav_menu('primary', __('Primary', 'basejump'));
-        register_nav_menu('browse', __('Browse', 'basejump'));
-        register_nav_menu('category', __('Categories', 'basejump'));
-        register_nav_menu('about', __('About', 'basejump'));
+                <?php
+                break;
+        endswitch;
     }
 
-    function bj_content_nav($nav_id) {
-        global $wp_query;
+endif; // ends check for _s_comment()
 
-        $nav_class = 'site-navigation paging-navigation';
-        if (is_single())
-            $nav_class = 'site-navigation post-navigation';
-        ?>
+function csf_default_menus() {
+    /**
+     * This theme uses wp_nav_menu() in one location.
+     * used in theme functions
+     */
+    // This theme styles the visual editor with editor-style.css to match the theme style.
+
+
+    add_theme_support('menus');
+    register_nav_menu('primary', __('Primary', 'basejump'));
+    register_nav_menu('browse', __('Browse', 'basejump'));
+    register_nav_menu('category', __('Categories', 'basejump'));
+    register_nav_menu('about', __('About', 'basejump'));
+}
+
+function bj_content_nav($nav_id) {
+    global $wp_query;
+
+    $nav_class = 'site-navigation paging-navigation';
+    if (is_single())
+        $nav_class = 'site-navigation post-navigation';
+    ?>
 
         <nav role="navigation" id="<?php echo $nav_id; ?>" class="<?php echo $nav_class; ?>">
             <h1 class="assistive-text"><?php _e('Post navigation', 'bj'); ?></h1>
 
-            <?php
-            if (!is_home() AND $nav_id == 'nav-above') :
-                core_functions::breadcrumbs();
-            endif;
-            ?>
+    <?php
+    if (!is_home() AND $nav_id == 'nav-above') :
+        core_functions::breadcrumbs();
+    endif;
+    ?>
 
 
 
-            <?php if (is_single() AND $nav_id == 'nav-below') : // navigation links for single posts  ?>
+    <?php if (is_single() AND $nav_id == 'nav-below') : // navigation links for single posts   ?>
 
                 <?php previous_post_link('<div class="nav-previous">%link</div>', '<span class="meta-nav">' . _x('&larr;', 'Previous post link', 'bj') . '</span> %title'); ?>
                 <?php next_post_link('<div class="nav-next">%link</div>', '%title <span class="meta-nav">' . _x('&rarr;', 'Next post link', 'bj') . '</span>'); ?>
@@ -400,25 +408,26 @@ if (!function_exists('_bj_comment')) :
 
 
 
-            <?php endif; ?>
+    <?php endif; ?>
 
         </nav><!-- #<?php echo $nav_id; ?> -->
-        <?php
-    }
+            <?php
+        }
 
-    function theme_body_class($classes) {
-        $theme = wp_get_theme();
-        $classes[] = sanitize_title_with_dashes($theme->Name);
-        return $classes;
-    }
+        function theme_body_class($classes) {
+            $theme = wp_get_theme();
+            $classes[] = sanitize_title_with_dashes($theme->Name);
+            return $classes;
+        }
 
-    add_filter('body_class', 'theme_body_class');
+        add_filter('body_class', 'theme_body_class');
 
-    /* ----------------------------------------------------------------------------------- */
-    /* 	Filters that allow shortcodes in Text Widgets
-      /*----------------------------------------------------------------------------------- */
+        /* ----------------------------------------------------------------------------------- */
+        /* 	Filters that allow shortcodes in Text Widgets
+          /*----------------------------------------------------------------------------------- */
 
-    add_filter('widget_text', 'shortcode_unautop');
-    add_filter('widget_text', 'do_shortcode');
+        add_filter('widget_text', 'shortcode_unautop');
+        add_filter('widget_text', 'do_shortcode');
+
 
 
