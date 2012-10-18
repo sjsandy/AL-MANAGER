@@ -1,23 +1,45 @@
 <?php
-
 /**
  * The file description. *
  * @package BJ
  * @since BJ 1.0
  */
 
-
 /**
  * Adds gallery to your posts
  * based on otto's photo gallery primer
  * @link http://ottopress.com/2011/photo-gallery-primer/
+ * @example
+ * <code>
+  //load the gallery using a factory patern
+  $bj_gallery = BJ_Gallery::factory();
+  //set_ID if not in loop
+  //set the number of thumbnails
+  //set the theme thumbnail size and displays the thumbnails
+  $bj_gallery->set_ID(478)
+  ->set_post_per_page(3)
+  ->thumbnails('thumbnail');
+ * </code>
  */
-class BJ_Gallery extends BJ_POSTDATA {
+class BJ_Gallery {
 
     private $ID = null,
             $order = 'ASC',
             $total_thumbnails,
-            $post_type = 'post';
+            $post_type = 'post',
+            $template_slug = 'gallery',
+            $post_per_page = 4;
+
+    public function set_template_slug($template_slug) {
+        $this->template_slug = $template_slug;
+        return $this;
+    }
+
+    public function set_post_per_page($post_per_page) {
+        $this->post_per_page = $post_per_page;
+        return $this;
+    }
+
 
     public function get_post_type() {
         return $this->post_type;
@@ -46,19 +68,17 @@ class BJ_Gallery extends BJ_POSTDATA {
         return $this->total_thumbnails;
     }
 
-
-
     function __construct() {
-        parent::__construct();
+        //parent::__construct();
         $this->set_template_slug('gallery');
     }
 
-
-    public static function factory(){
-        return $factory = new BJ_Gallery();
+    public static function factory($template_slug = 'gallery',$post_per_page =4) {
+       $factory = new BJ_Gallery();
+       $factory->set_template_slug($template_slug);
+       $factory->set_post_per_page($post_per_page);
+       return $factory;
     }
-
-
 
     public function gallery_thumbnails() {
 
@@ -77,29 +97,60 @@ class BJ_Gallery extends BJ_POSTDATA {
                     'post_mime_type' => 'image',
                     'order' => $this->order,
                     'orderby' => 'menu_order ID',
-                    'posts_per_page' => $this->get_post_per_page(),
+                    'posts_per_page' => $this->post_per_page,
                     'post__not_in' => array($thumb_id),
                     'update_post_term_cache' => false,
                 ));
 
         $imagedata = $images->posts;
-        $this->total_thumbnails = $images->found_posts+1;
+        $this->total_thumbnails = $images->found_posts + 1;
         return $imagedata;
     }
-
 
     /**
      * Display thumbnails from your gallery that links to full size image
      * @param string $thumbnail_size
+     * @param string $class_name - css class for figure element
      */
-    public function thumbnails($thumbnail_size = 'gallery-tumbnail') {
+    public function thumbnails($thumbnail_size = 'gallery-tumbnail',$link=null) {
+        /*
+         * @todo make link dynamic
+         */
         $images = $this->gallery_thumbnails();
         foreach ($images as $image) {
-            echo '<a href="' . get_permalink($image->ID) . '">' . wp_get_attachment_image($image->ID, $thumbnail_size) . '</a>';
+            echo '<figure class="gallery-thumbnail"><a href="' . get_permalink($image->ID) . '">' . wp_get_attachment_image($image->ID, $thumbnail_size) . '</a></figure>';
         }
     }
 
+    /**
+     * Display thumbnails from your gallery that links to full size image
+     * Uses twitter bootstrap thumbnails markup
+     * @param string $thumbnail_size
+     * @param string $colunm_span span4
+     */
+    public function thumbnail_gallery($thumbnail_size = 'gallery-tumbnail', $colunm_span = 'span4') {
+        $images = $this->gallery_thumbnails();
+        ?>
+                        <div class="row">
+                            <div class="span12">
+                                <ul class="thumbnails">
+                                    <li class="<?php echo $colunm_span ?>">
+                                        <div class="thumbnail">
+        <?php
+        foreach ($images as $image) {
+            echo '<figure class="gallery-thumbnail"><a href="' . get_permalink($image->ID) . '">' . wp_get_attachment_image($image->ID, $thumbnail_size) . '</a></figure>';
+            ?>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- ###### -->
 
+                                </div>
+                                <!-- ###### -->
+            <?php
+        }
+    }
 
     /**
      * Get exif data from photos
@@ -117,7 +168,7 @@ class BJ_Gallery extends BJ_POSTDATA {
 
         $imagemeta = wp_get_attachment_metadata($post_id);
 
-        if ($exif_info = 'shutter_speed'):
+        if ($exif_info == 'shutter_speed'):
             // shutter speed handler
             if ((1 / $imagemeta['image_meta']['shutter_speed']) > 1) {
                 echo "1/";
@@ -132,11 +183,9 @@ class BJ_Gallery extends BJ_POSTDATA {
 
         else:
             return $imagemeta['image_meta']["{$exif_info}"];
-
         endif;
+
     }
-
-
 
     /**
      * Displays the photo exif data in your theme
@@ -184,7 +233,6 @@ class BJ_Gallery extends BJ_POSTDATA {
         $this->set_query($query);
 
         $this->loop();
-
     }
 
 }
