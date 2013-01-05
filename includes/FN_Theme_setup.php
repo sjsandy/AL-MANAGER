@@ -295,7 +295,7 @@ class FN_Setup_Menus {
             //Create a home menu item
             $menu_home = array(
                 'menu-item-type' => 'custom',
-                'menu-item-url' => get_home_url('/'),
+                'menu-item-url' => get_site_url(),
                 'menu-item-title' => 'Home',
                 'menu-item-attr-title' => 'Home',
                 'menu-item-status' => 'publish'

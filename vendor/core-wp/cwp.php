@@ -176,7 +176,7 @@ class cwp {
             $file = TEMPLATEPATH . '/' . $filepath;
             $located = true;
         elseif (file_exists(CM_PATH . '/' . $filepath)):
-            $file = CM_PATH . '/' . $filepath;
+            $file = CWP_PATH . '/' . $filepath;
             $located = true;
         endif;
         if (!$located):
@@ -194,14 +194,15 @@ class cwp {
      * @return string
      */
     public static function locate_in_library($filename = null, $dir = 'css') {
+
         $file = false;
         if (isset($filename)):
             $filepath = 'library/' . $dir . '/' . $filename;
             if (file_exists(get_stylesheet_directory() . '/' . $filepath)):
                 $file = get_stylesheet_directory_uri() . '/' . $filepath;
 
-            elseif (file_exists(get_template_directory_uri() . '/' . $filepath)):
-                $file = get_stylesheet_directory() . '/' . $filepath;
+            elseif (file_exists(get_template_directory() . '/' . $filepath)):
+                $file = get_template_directory_uri() . '/' . $filepath;
 
             elseif (CWP_PATH . '/' . $filepath):
                 $file = CWP_URL . '/' . $filepath;
@@ -209,6 +210,7 @@ class cwp {
             endif;
             return $file;
         endif;
+
     }
 
     public static function css($name = 'style', $module = null) {
@@ -522,7 +524,7 @@ class cwp {
      * cwp::add_widget('Top Sidebar', 'top-sidebar', 'Top sidebar widget');
      * </code>
      */
-    public static function register_sidebar($name, $widget_id, $description = "", $id = 'widgets', $div = "aside", $title = 'h3') {
+    public static function register_sidebar($name, $widget_id, $description = "", $div = "div", $title = 'h3') {
         //$widget_id = preg_replace(" ", "-", $name);
         register_sidebar(array(
             'name' => ucfirst($name),

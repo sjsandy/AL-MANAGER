@@ -5,7 +5,7 @@
  */
 
 /**
- * Description of bj_template
+ * A simple and easy to use set of templates tags and function for BaseJump WP theme Kit
  *
  * @author studio
  */
@@ -23,12 +23,22 @@ class BJ {
     public static function site_logo($img_url = null) {
         $logo = get_theme_mod('bjc_logo');
         if (!empty($logo)):
-            return '<figure class="site-logo"><img src="' . $logo . '" alt="' . get_bloginfo('name') . '"  ></figure>';
+            echo '<figure class="site-logo"><img src="' . $logo . '" alt="' . get_bloginfo('name') . '"  ></figure>';
         elseif (isset($img_url)):
-            return '<figure class="site-logo"><img src="' . $img_url . '" alt="' . get_bloginfo('name') . '"  ></figure>';
+            echo '<figure class="site-logo"><img src="' . $img_url . '" alt="' . get_bloginfo('name') . '"  ></figure>';
         else :
-            return get_bloginfo('name');
+            echo get_bloginfo('name');
         endif;
+        BJ_ACTIONS::bj_logo_slug();
+    }
+
+    /**
+     * Displaye the site slug of the default description
+     * @return type
+     */
+    public static function site_slug() {
+        $description = get_bloginfo('description');
+        return $slug = get_theme_mod('bjc_site_slug', $description);
     }
 
     public static function footer_info() {
@@ -80,7 +90,10 @@ class BJ {
     }
 
     public static function contact_author() {
+
         global $post;
+        if (!is_single() OR !is_page())
+            return false;
         $author = $post->post_author;
         ?>
         <address>
@@ -102,18 +115,19 @@ class BJ {
         endif;
     }
 
-    public static function locate_uri($template_names, $dir_path = NULL) {
+    /**
+     * Find the location og file
+     * @param type $file
+     * @return string
+     */
+    public static function locate_uri($file = NULL) {
+        if (!isset($file))
+            return false;
         $located = FALSE;
-        foreach ((array) $template_names as $template_name) {
-            if (!$template_name)
-                continue;
-            if (file_exists(get_stylesheet_directory() . '/' . $template_name)) {
-                $located = get_stylesheet_directory_uri() . '/' . $template_name;
-                break;
-            } else if (file_exists(get_template_directory() . '/' . $template_name)) {
-                $located = get_template_directory_uri() . '/' . $template_name;
-                break;
-            }
+        if (file_exists(get_stylesheet_directory() . '/' . $file)) {
+            $located = get_stylesheet_directory_uri() . '/' . $file;
+        } else if (file_exists(get_template_directory() . '/' . $file)) {
+            $located = get_template_directory_uri() . '/' . $file;
         }
         return $located;
     }
@@ -183,14 +197,20 @@ class BJ {
      * display a default post thumbnail.
      */
     public static function default_post_thumbanils() {
+
         add_filter('post_thumbnail_html', array('BJ', 'default_thumbnail'));
     }
 
     function default_thumbnail($html) {
-        if (empty($html))
-            $html = '<figure class="defautl-post-thumbnail">';
-        $html .= '<img src="' . trailingslashit(get_stylesheet_directory_uri()) . 'images/default-thumbnail.png' . '" alt="" />';
-        $html .='</figure>';
+        global $_wp_additional_image_sizes;
+        $isize = $_wp_additional_image_sizes;
+        $w = $isize['post-thumbnail']['width'];
+        $h = $isize['post-thumbnail']['height'];
+        if (empty($html)) {
+            $html = '<figure class="default-post-thumbnail">';
+            $html .= '<img src="http://placehold.it/' . $w . 'x' . $h . '" alt="" />';
+            $html .='</figure>';
+        }
         return $html;
     }
 
@@ -235,14 +255,91 @@ class BJ {
         wp_reset_postdata();
     }
 
-
     public static function image_navigation() {
-                        ?>
-                        <nav id="image-navigation">
-                	<span class="previous-image"><?php previous_image_link(false, __('&larr; Previous', '_s')); ?></span>
-                	<span class="next-image"><?php next_image_link(false, __('Next &rarr;', '_s')); ?></span>
-                	</nav><!-- #image-navigation -->
+        ?>
+        <nav id="image-navigation">
+            <span class="previous-image"><?php previous_image_link(false, __('&larr; Previous', '_s')); ?></span>
+            <span class="next-image"><?php next_image_link(false, __('Next &rarr;', '_s')); ?></span>
+        </nav><!-- #image-navigation -->
 
+        <?php
+    }
+
+    public static function tag_list($name = 'Tags') {
+
+        $tags = get_tags();
+        echo '<ul class="tag-list"><li>' . $name . '</li>';
+        foreach ($tags as $tag):
+            $tag_link = get_tag_link($tag->term_id);
+            ?>
+            <li><a href="<?php echo $tag_link ?>" ><?php echo esc_attr($tag->name); ?></a></li>
+            <?php
+        endforeach;
+        echo '<ul>';
+    }
+
+    /**
+     * Display  post tagged featured or highlights
+     * @param array $query - wp_query
+     * @param string $tpl tpl name
+     */
+    public static function highlights($query = array('showposts' => 5, 'tag' => 'featured,highlights'), $tpl = 'highlights') {
+
+        //$query_highlights = array('showposts' => 3);
+        BJ_POSTDATA::factory()
+                ->set_template_slug($tpl)
+                ->set_wp_query($query)
+                ->query();
+    }
+
+    public static function google_authorship($user_id = null, $meta_field = '1') {
+        echo '<link rel="author" href="' . get_theme_mod('bjc_gplus_url') . '" />';
+    }
+
+    public static function twitter_card() {
+        global $post;
+        $img = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'medium');
+        if (is_single() || is_page()):
+            setup_postdata($post);
+            ?>
+            <meta name="twitter:card" content="summary">
+            <meta name="twitter:site" content="@<?php echo $site = get_theme_mod('bjc_twitter_username'); ?>">
+            <meta name="twitter:creator" content="@<?php echo get_the_author_meta('twitter_user'); ?>">
+            <meta name="twitter:url" content="<?php echo get_permalink(); ?>">
+            <meta name="twitter:title" content="<?php echo get_the_title() ?>">
+            <meta name="twitter:description" content="<?php echo esc_html(get_the_excerpt()); ?>">
+            <meta name="twitter:image" content="<?php echo $img[0] ?>">
+
+            <?php
+        endif;
+    }
+
+    public static function tweets($twitter_user = null, $quantity = 3) {
+
+        if(!isset($twitter_user)) $twitter_user = get_theme_mod('bjc_twitter_username', 'shawnsandy');
+
+
+        include_once(ABSPATH . WPINC . '/feed.php');
+        $rss = fetch_feed('https://api.twitter.com/1/statuses/user_timeline.rss?screen_name=shawnsandy');
+        $maxitems = $rss->get_item_quantity($quantity);
+        $rss_items = $rss->get_items(0, $maxitems);
+        ?>
+
+        <ul>
+            <?php
+            if ($maxitems == 0)
+                echo '<li>No items.</li>';
+            else
+// Loop through each feed item and display each item as a hyperlink.
+                foreach ($rss_items as $item) :
+                    ?>
+                    <li>
+                        <a href='<?php echo $item->get_permalink(); ?>'>
+                            <?php echo $item->get_title(); ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+        </ul>
         <?php
     }
 

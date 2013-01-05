@@ -84,11 +84,10 @@ function cwp_theme_setup() {
     add_theme_support('automatic-feed-links');
 
     core_functions::favicon();
-    add_theme_support('post-thumbnails');
 
     add_image_size('icon-60', 60, 60, true);
-    add_image_size('icon-100', 100, 100, true);
-    add_image_size('icon-40', 40, 40, true);
+    add_image_size('icon-120', 120, 120, true);
+    add_image_size('icon-80', 80, 20, true);
 
     /* Move the WordPress generator to a better priority. */
     remove_action('wp_head', 'wp_generator');
@@ -99,7 +98,21 @@ function cwp_theme_setup() {
     add_filter('term_description', 'do_shortcode');
 
 
+    add_filter('image_size_names_choose', 'cwp_icon_images');
 
+    add_theme_support('post-thumbnails');
+
+
+}
+
+function cwp_icon_images($sizes) {
+    $isizes = array(
+        "icon-60" => __('Icon small', 'basejump'),
+        "icon-80" => __('Icon medium', 'basejump'),
+        "icon-100" => __('Icon large', 'basejump'),
+    );
+    $imgs = array_merge($sizes, $isizes);
+    return $imgs;
 }
 
 add_action('widgets_init', 'cwp_widgets');
@@ -127,19 +140,7 @@ function jump_scripts() {
      * bootstrap scripts
      */
     wp_register_script('bootstrap-js', cwp::locate_in_library('bootstrap.min.js', 'bootstrap/js'), array('jquery'), '', true);
-//    wp_register_script('bootstrap-alert', cwp::locate_in_library('bootstrap-alert.js', 'bootstrap/js'), array('jquery'), '', true);
-//    wp_register_script('bootstrap-buttons', cwp::locate_in_library('bootstrap-button.js', 'bootstrap/js'), array('jquery'), '', true);
-//    wp_register_script('bootstrap-dropdown', cwp::locate_in_library('bootstrap-dropdown.js', 'bootstrap/js'), array('jquery'), '', true);
-//    wp_register_script('bootstrap-modal', cwp::locate_in_library('bootstrap-modal.js', 'bootstrap/js'), array('jquery'), '', true);
-//    wp_register_script('bootstrap-popover', cwp::locate_in_library('bootstrap-popover.js', 'bootstrap/js'), array('jquery'), '', true);
-//    wp_register_script('bootstrap-scrollspy', cwp::locate_in_library('bootstrap-scrollspy.js', 'bootstrap/js'), array('jquery'), '', true);
-//    wp_register_script('bootstrap-tabs', cwp::locate_in_library('bootstrap-tab.js', 'bootstrap/js'), array('jquery'), '', true);
-//    wp_register_script('bootstrap-twipsy', cwp::locate_in_library('bootstrap-twispy.js', 'bootstrap/js'), array('jquery'), '', true);
-//    wp_register_script('bootstrap-transition', cwp::locate_in_library('bootstrap-transition.js', 'bootstrap/js'), array('jquery'), '', true);
-//    wp_register_script('bootstrap-collapse', cwp::locate_in_library('bootstrap-collapse.js', 'bootstrap/js'), array('jquery'), '', true);
-//    wp_register_script('bootstrap-typeahead', cwp::locate_in_library('bootstrap-typeahead.js', 'bootstrap/js'), array('jquery'), '', true);
-//    wp_register_script('bootstrap-tooltip', cwp::locate_in_library('bootstrap-tooltip.js', 'bootstrap/js'), array('jquery'), '', true);
-    wp_register_script('modernizer', cwp::locate_in_library('modernizr.custom.62477.js', 'js'), null, '2.6.1', true);
+    wp_register_script('modernizer', cwp::locate_in_library('modernizr.min.js', 'js'), null, '2.6.1', true);
     wp_register_script('placeholder', cwp::locate_in_library('jquery.placeholder.min.js', 'js'), null, '2.0.7 ', true);
     wp_register_script('fixie', cwp::locate_in_library('fixie_min.js', 'fixie'), null, '', true);
     wp_register_script('holder-js', cwp::locate_in_library('holder.js', 'js'), null, '', true);
@@ -147,6 +148,8 @@ function jump_scripts() {
     wp_register_script('scroll-to', cwp::locate_in_library('jquery.scrollTo.min.js', 'scroll-to'), null, '', true);
     wp_register_script('local-scroll', cwp::locate_in_library('jquery.serialScroll.min.js', 'serialScroll'), null, '', true);
     wp_register_script('theme-js', cwp::locate_in_library('theme.js', 'js'), null, '', true);
+    wp_register_script('pretty-photo', cwp::locate_in_library('jquery.prettyPhoto.js', 'pretty-photo/js'), null, '', true);
+    wp_register_style('pretty-photo-css', cwp::locate_in_library('prettyPhoto.css', 'pretty-photo/css'));
 
 
 
@@ -185,16 +188,19 @@ function theme_footer() {
     <?php
 }
 
-/*
- * add thumbnails to editior list
- */
-core_admin::post_list_thumbs();
+add_action('admin_init', 'cwp_admin_init');
+
+function cwp_admin_init(){
+
 
 
 /*
  * add columns
  */
 core_admin::column_id();
+}
+
+
 
 
 /*
@@ -213,8 +219,7 @@ core_admin::end_self_ping();
 /**
  * Contact info
  */
-//global $user ;
-//if(current_user_can('Administrator'))
+
 cwp_social::contact_info();
 
 /**

@@ -168,7 +168,7 @@ $radio_options = array(
  *
  */
 function cwp_theme_tabs($current = 'theme_desc') {
-    $cur = get_current_theme();
+    $cur = wp_get_theme();
     $tabs = array('theme_desc' => $cur, 'options_tab' => 'Options');
     echo '<div id="icon-themes" class="icon32"><br></div>';
     echo '<h2 class="nav-tab-wrapper">';

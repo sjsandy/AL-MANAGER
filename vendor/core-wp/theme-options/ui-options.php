@@ -162,7 +162,7 @@ if (!isset($_REQUEST['settings-updated']))
                             <label class="description" for="cwp_theme_options[selectinput]">
                                 <?php _e('Select the default custom option for the theme UI, some options can be changed by', 'corewp'); ?></label>
                             <?php else : ?>
-                            <?php $cwp_the_theme = get_current_theme();
+                            <?php $cwp_the_theme = wp_get_theme();
                             echo '<strong>Sorry theme ' . ucfirst($cwp_the_theme) . ', does not support Custom UI Options</strong>' ?>
 
                         <?php endif ?>

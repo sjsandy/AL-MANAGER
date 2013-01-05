@@ -21,7 +21,7 @@ class Recent_thumbs_Widget extends WP_Widget {
         $control_ops = array('width' => '100%', 'height' => '100%', 'id_base' => 'recent-thumbs-widget');
 
         /* Create the widget. */
-        $this->WP_Widget('recent-thumbs-widget', __('Recent Post(w/thumbs)', 'recent-thumbs-widget'), $widget_ops, $control_ops);
+        $this->WP_Widget('recent-thumbs-widget', __('Recent Post Plus', 'recent-thumbs-widget'), $widget_ops, $control_ops);
     }
 
     /**

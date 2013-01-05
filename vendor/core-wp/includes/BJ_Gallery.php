@@ -28,7 +28,13 @@ class BJ_Gallery {
             $total_thumbnails,
             $post_type = 'post',
             $template_slug = 'gallery',
-            $post_per_page = 4;
+            $post_per_page = 4,
+            $template_name;
+
+    public function set_template_name($template_name) {
+        $this->template_name = $template_name;
+        return $this;
+    }
 
     public function set_template_slug($template_slug) {
         $this->template_slug = $template_slug;
@@ -39,7 +45,6 @@ class BJ_Gallery {
         $this->post_per_page = $post_per_page;
         return $this;
     }
-
 
     public function get_post_type() {
         return $this->post_type;
@@ -73,11 +78,11 @@ class BJ_Gallery {
         $this->set_template_slug('gallery');
     }
 
-    public static function factory($template_slug = 'gallery',$post_per_page =4) {
-       $factory = new BJ_Gallery();
-       $factory->set_template_slug($template_slug);
-       $factory->set_post_per_page($post_per_page);
-       return $factory;
+    public static function factory($template_slug = 'gallery', $post_per_page = 4) {
+        $factory = new BJ_Gallery();
+        $factory->set_template_slug($template_slug);
+        $factory->set_post_per_page($post_per_page);
+        return $factory;
     }
 
     public function gallery_thumbnails() {
@@ -107,18 +112,49 @@ class BJ_Gallery {
         return $imagedata;
     }
 
+    public function gallery() {
+
+        global $post;
+
+        //if $ID NULL use the global post->ID
+        if (!isset($this->ID))
+            $this->ID = $post->ID;
+        //get the post thumbnail ID
+        $thumb_id = get_post_thumbnail_id($this->ID);
+        //image query
+        $images = new WP_Query(array(
+                    'post_parent' => $this->ID,
+                    'post_status' => 'inherit',
+                    'post_type' => 'attachment',
+                    'post_mime_type' => 'image',
+                    'order' => $this->order,
+                    'orderby' => 'menu_order ID',
+                    'posts_per_page' => $this->post_per_page,
+                    'post__not_in' => array($thumb_id),
+                    'update_post_term_cache' => false,
+                ));
+
+        if($images->have_posts()):
+            while($images->have_posts()):
+            $images->the_post();
+            bj_layout::get_template_part($this->template_slug, $this->template_name);
+            endwhile;
+        endif;
+    }
+
     /**
      * Display thumbnails from your gallery that links to full size image
      * @param string $thumbnail_size
      * @param string $class_name - css class for figure element
      */
-    public function thumbnails($thumbnail_size = 'gallery-tumbnail',$link=null) {
+    public function thumbnails($thumbnail_size = 'gallery-tumbnail', $link = null) {
         /*
          * @todo make link dynamic
          */
+
         $images = $this->gallery_thumbnails();
         foreach ($images as $image) {
-            echo '<figure class="gallery-thumbnail"><a href="' . get_permalink($image->ID) . '">' . wp_get_attachment_image($image->ID, $thumbnail_size) . '</a></figure>';
+            echo '<figure class="gallery-thumbnail"><a href="' . get_permalink($image->post_parent) . '">' . wp_get_attachment_image($image->ID, $thumbnail_size) . '</a></figure>';
         }
     }
 
@@ -131,25 +167,76 @@ class BJ_Gallery {
     public function thumbnail_gallery($thumbnail_size = 'gallery-tumbnail', $colunm_span = 'span4') {
         $images = $this->gallery_thumbnails();
         ?>
-                        <div class="row">
-                            <div class="span12">
-                                <ul class="thumbnails">
-                                    <li class="<?php echo $colunm_span ?>">
-                                        <div class="thumbnail">
-        <?php
-        foreach ($images as $image) {
-            echo '<figure class="gallery-thumbnail"><a href="' . get_permalink($image->ID) . '">' . wp_get_attachment_image($image->ID, $thumbnail_size) . '</a></figure>';
-            ?>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <!-- ###### -->
+        <div class="row">
+            <div class="span12">
+                <ul class="thumbnails">
+                    <li class="<?php echo $colunm_span ?>">
+                        <div class="thumbnail">
+                            <?php
+                            foreach ($images as $image) {
+                                echo '<figure class="gallery-thumbnail"><a href="' . get_permalink($image->ID) . '">' . wp_get_attachment_image($image->ID, $thumbnail_size) . '</a></figure>';
+                                ?>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!-- ###### -->
 
-                                </div>
-                                <!-- ###### -->
+            </div>
+            <!-- ###### -->
             <?php
         }
+    }
+
+    /**
+     *
+     * @global type $post
+     * @param type $ID
+     * @param type $thumbnail_size
+     * @param type $prev
+     * @param type $next
+     */
+    public function carousel($ID = null, $thumbnail_size = 'medium', $prev = '<', $next = '>') {
+        $images = $this->gallery_thumbnails();
+
+        global $post;
+        if (!isset($ID))
+            $ID = $post->ID;
+
+        add_action('wp_footer', array($this, 'gallery_carousel'));
+        ?>
+        <div id="bj-carousel" class="carousel slide">
+            <div class="carousel-inner">
+                <div class="item active">
+                    <img src="" alt="">
+                    <p><?php echo get_the_post_thumbnail($ID, $thumbnail_size); ?></p>
+                </div>
+        <?php foreach ($images as $image): ?>
+                    <div class="item">
+                        <figure class="gallery-thumbnail">
+            <?php echo wp_get_attachment_image($image->ID, $thumbnail_size); ?>
+                        </figure>
+                        <p class="imgage-caption">
+            <?php echo wp_trim_words($image->post_excerpt, 30) ?>
+                        </p>
+                    </div>
+        <?php endforeach; ?>
+
+            </div>
+            <a class="left carousel-control" href="#bj-carousel" data-slide="prev"><?php echo $prev ?></a>
+            <a class="right carousel-control" href="#bj-carousel" data-slide="next"><?php echo $next ?></a>
+        </div>
+        <?php
+    }
+
+    public function gallery_carousel() {
+        ?>
+        <script type="text/javascript">
+            jQuery(document).ready(function($){
+                $('.carousel').carousel();
+            })
+        </script>
+        <?php
     }
 
     /**
@@ -168,6 +255,9 @@ class BJ_Gallery {
 
         $imagemeta = wp_get_attachment_metadata($post_id);
 
+        if (empty($imagemeta))
+            return;
+
         if ($exif_info == 'shutter_speed'):
             // shutter speed handler
             if ((1 / $imagemeta['image_meta']['shutter_speed']) > 1) {
@@ -184,7 +274,6 @@ class BJ_Gallery {
         else:
             return $imagemeta['image_meta']["{$exif_info}"];
         endif;
-
     }
 
     /**

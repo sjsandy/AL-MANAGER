@@ -175,6 +175,30 @@ class Ext_post_type {
     }
 
     public function set_capability_type($capability_type) {
+
+        /* By default, only 2 caps are needed: 'manage_portfolio' and 'edit_portfolio_items'. */
+		$capabilities = array(
+
+			// meta caps (don't assign these to roles)
+			'edit_post'              => 'edit_portfolio_item',
+			'read_post'              => 'read_portfolio_item',
+			'delete_post'            => 'delete_portfolio_item',
+
+			// primitive caps used outside of map_meta_cap()
+			'edit_posts'             => 'edit_portfolio_items',
+			'edit_others_posts'      => 'manage_portfolio',
+			'publish_posts'          => 'manage_portfolio',
+			'read_private_posts'     => 'read',
+
+			// primitive caps used inside of map_meta_cap()
+			'read'                   => 'read',
+			'delete_posts'           => 'manage_portfolio',
+			'delete_private_posts'   => 'manage_portfolio',
+			'delete_published_posts' => 'manage_portfolio',
+			'delete_others_posts'    => 'manage_portfolio',
+			'edit_private_posts'     => 'edit_portfolio_items',
+			'edit_published_posts'   => 'edit_portfolio_items'
+		);
         $this->capability_type = $capability_type;
         return $this;
     }
@@ -401,6 +425,9 @@ class Ext_post_type {
         add_action('contextual_help', array(&$this, 'help_text'), 10, 3);
     }
 
+    /*
+     * TODO change of remove contextual help text
+     */
     public function help_text($contextual_help, $screen_id, $screen) {
         //$contextual_help .= var_dump($screen); // use this to help determine $screen->id
         if ('cwp_' . $this->get_post_type_name() == $screen->id) {
@@ -455,7 +482,7 @@ You can also edit multiple Articles at once. Select the Articles you want to edi
 
 
 
-class Replace_Title_Here {
+class Replace_Editor_Title {
 
     private $post_type,
             $new_title;
@@ -478,11 +505,10 @@ class Replace_Title_Here {
      *
      * @param string $new_title
      * @param string $post_type
-     * @return \Replace_Title_Here
-     */
+     * @return \RReplace_Editor_Title     */
     public static function replace($new_title = 'Enter Your Post Title Here',$post_type= 'post'){
 
-        $factory = new Replace_Title_Here();
+        $factory = new Replace_Editor_Title();
         $factory->set_new_title($new_title);
         $factory->set_post_type($post_type);
         $factory->change_editor_title();

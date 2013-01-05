@@ -24,7 +24,7 @@ class cts_products {
     public function add_post_type() {
 
         $this->post_type->set_publicly_queryable(true)
-                ->set_capability_type('page')
+                ->set_capability_type('post')
                 ->set_menu_postion(11)
                 ->set_public(true)
                 ->set_menu_title("Products")

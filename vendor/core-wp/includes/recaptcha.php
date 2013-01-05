@@ -19,8 +19,10 @@ class recaptcha {
     private static $instance;
 
     /**
-     * Singleton Pattern
-     * @return class object
+     * Singleton
+     * @param type $publickey
+     * @param type $privatekey
+     * @return instance
      */
     public static function instance($publickey,$privatekey) {
         if (!is_object(self::$instance)) {
