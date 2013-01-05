@@ -12,7 +12,6 @@ AutoLoad Manager is a simple PHP,  class / interface auto-load manager for WordP
 
 A simple PHP classes / interface auto-load manager for wordpress, built with PHP-Autoload-Manager by http://bashar.alfallouji.com/php-autoload-manager/. AL-Manager allows you to easily extend the power of WordPress using PHP, classes and libraries.
 
-=Developer Info =
 =Autoload Manager (Developer Info) =
 
 The AutoLoad Manager is a generic autoloader that can be used with any PHP framework or library. Using the PHP tokenizer mechanism, it will parse folder(s) and discover the different classes and interfaces defined. The big advantage of using this autoloadManager is that it will allow you to implement whatever naming rules you want and may have mutliple classes in one file (if you want to have a such feature).
