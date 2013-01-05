@@ -261,7 +261,7 @@ class cwp_post_type {
     /**
      * register you post type
      */
-    public function register() {
+    public function register($use_capabilities = null) {
         /**
          * custom post type template
          * http://codex.wordpress.org/Function_Reference/register_post_type
@@ -284,31 +284,95 @@ class cwp_post_type {
             'menu_name' => $this->get_menu_title()
         );
 
-        $args = array(
-            'labels' => $labels,
-            'public' => $this->get_public(),
-            'publicly_queryable' => $this->publicly_queryable,
-            'show_ui' => $this->get_show_ui(),
-            'show_in_menu' => $this->get_show_in_menu(),
-            'query_var' => $this->query_var,
-            'rewrite' => $this->get_rewrite(),
-            'capability_type' => $this->get_capability_type(),
-            'has_archive' => $this->get_has_archive(),
-            'hierarchical' => $this->get_hierarchical(),
-            'menu_position' => $this->get_menu_postion(),
-            'show_in_menu' => $this->get_show_in_menu(),
-            'menu_icon' => $this->get_menu_icon(),
-            'show_in_nave_menus' => $this->show_in_nav_menus,
-            'supports' => $this->get_supports(),
-            'taxonomies' => $this->taxonomies,
-            'meta_cap' => $this->map_meta_cap
-                //'title','editor','author','thumbnail','excerpt','comments',trackbacks,custom-fields,post-formats,revisions,page-attributes
-        );
+        if (isset($this->capabilities)):
+            //use the default by setting the capabilities using a boolean true;
+            if(!is_array($this->capabilities)):
+            //******************************************************************
+            $caps[edit_post] = "edit_{$capability_type}";
+            $caps[read_post] = "read_{$capability_type}";
+            $caps[delete_post] = "delete_{$capability_type}";
+            //******************************************************************
+            $caps[edit_posts] = "edit_{$capability_type}s";
+            $caps[edit_others_posts] = "manage_{$capability_type}s";
+            $caps[publish_posts] = "edit_{$capability_type}s";
+            $caps[read_private_posts] = "edit_{$capability_type}s";
+            //******************************************************************
+            $caps[delete_posts] = "edit_{$capability_type}s";
+            $caps[delete_private_posts] = "edit_{$capability_type}s";
+            $caps[delete_published_posts] = "edit_{$capability_type}s";
+            $caps[delete_others_posts] = "manage_{$capability_type}s";
+            $caps[edit_private_posts] = "edit_{$capability_type}s";
+            $caps[edit_published_posts] = "edit_{$capability_type}s";
+            $this->capabilities = $caps;
+            endif;
+
+
+            $args = array(
+                'labels' => $labels,
+                'public' => $this->get_public(),
+                'publicly_queryable' => $this->publicly_queryable,
+                'show_ui' => $this->get_show_ui(),
+                'show_in_menu' => $this->get_show_in_menu(),
+                'query_var' => $this->query_var,
+                'rewrite' => $this->get_rewrite(),
+                'capability_type' => $this->get_capability_type(),
+                'capabilities' => $this->capabilities,
+                'has_archive' => $this->get_has_archive(),
+                'hierarchical' => $this->get_hierarchical(),
+                'menu_position' => $this->get_menu_postion(),
+                'show_in_menu' => $this->get_show_in_menu(),
+                'menu_icon' => $this->get_menu_icon(),
+                'show_in_nave_menus' => $this->show_in_nav_menus,
+                'supports' => $this->get_supports(),
+                'taxonomies' => $this->taxonomies,
+                'meta_cap' => $this->map_meta_cap,
+
+                    //'title','editor','author','thumbnail','excerpt','comments',trackbacks,custom-fields,post-formats,revisions,page-attributes
+            );
+        else:
+            //no capabilities
+            $args = array(
+                'labels' => $labels,
+                'public' => $this->get_public(),
+                'publicly_queryable' => $this->publicly_queryable,
+                'show_ui' => $this->get_show_ui(),
+                'show_in_menu' => $this->get_show_in_menu(),
+                'query_var' => $this->query_var,
+                'rewrite' => $this->get_rewrite(),
+                'capability_type' => $this->get_capability_type(),
+                'has_archive' => $this->get_has_archive(),
+                'hierarchical' => $this->get_hierarchical(),
+                'menu_position' => $this->get_menu_postion(),
+                'show_in_menu' => $this->get_show_in_menu(),
+                'menu_icon' => $this->get_menu_icon(),
+                'show_in_nave_menus' => $this->show_in_nav_menus,
+                'supports' => $this->get_supports(),
+                'taxonomies' => $this->taxonomies,
+                'meta_cap' => $this->map_meta_cap
+                    //'title','editor','author','thumbnail','excerpt','comments',trackbacks,custom-fields,post-formats,revisions,page-attributes
+            );
+        endif;
+
+
         //>>>>> change post type from Article
         register_post_type('cwp_' . $this->get_post_type_name(), $args);
 
         add_filter('post_updated_messages', array(&$this, 'updated_messages'));
         add_action('contextual_help', array(&$this, 'help_text'), 10, 3);
+    }
+
+
+
+    public function set_administrator() {
+        /* Get the administrator role. */
+        $role =& get_role('administrator');
+
+        /* If the administrator role exists, add required capabilities for the plugin. */
+        if (!empty($role)) {
+
+            $role->add_cap("manage_{$this->capabilities}s");
+            $role->add_cap("edit_{$this->capabilities}s");
+        }
     }
 
     /**

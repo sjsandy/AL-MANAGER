@@ -106,5 +106,9 @@ class BJ_Shortcodes {
         }
     }
 
+    public function gallery(){
+
+    }
+
 }
 

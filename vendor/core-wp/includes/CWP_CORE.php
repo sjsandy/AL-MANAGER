@@ -132,14 +132,14 @@ class cwp_social {
         $contactmethods['feedburner_page'] = 'Feedburner Url';
         $contactmethods['facebook'] = 'Facebook Url';
         $contactmethods['facebook_page'] = 'Facebook Fan Page';
+        $contactmethods['google_plus_url'] = 'Google Plus Url';
+        $contactmethods['google_page_url'] = 'Google Page Url';
         $contactmethods['twitter'] = 'Twitter Url';
         $contactmethods['twitter_user'] = 'Twitter Username';
         $contactmethods['linkedin'] = 'LinkedIn';
-        $contactmethods['flickr'] = 'Flickr Url';
+        $contactmethods['flickr'] = 'Flickr Username';
         $contactmethods['blog'] = 'Blog Url';
-        $contactmethods['tumblr'] = 'Tumblr';
-        $contactmethods['telephone'] = 'Telephone';
-        $contactmethods['cell'] = 'Cellular';
+        $contactmethods['cell'] = 'Mobile Phone';
         return $contactmethods;
     }
 
@@ -215,19 +215,19 @@ class cwp_social {
         ?>
         <div class="fb-like" data-href="<?php echo esc_attr($href) ?>"data-send="true" data-width="<?php echo ecs_attr($width) ?>"
              data-show-faces="<?php echo esc_attr($faces) ?>" data-font="<?php echo esc_attr($font) ?>"></div>
-        <?php
-        return ob_get_clean();
-    }
+             <?php
+             return ob_get_clean();
+         }
 
-    /**
-     * FB html5 share
-     * Include the JavaScript SDK on your page once, ideally right after the opening <body> tag.
-     * @param type $app_id
-     * @return html/js
-     */
-    public static function fb_js($app_id = null) {
-        ob_start();
-        ?>
+         /**
+          * FB html5 share
+          * Include the JavaScript SDK on your page once, ideally right after the opening <body> tag.
+          * @param type $app_id
+          * @return html/js
+          */
+         public static function fb_js($app_id = null) {
+             ob_start();
+             ?>
         <div id="fb-root"></div>
         <script>(function(d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];
@@ -275,7 +275,7 @@ class cwp_social {
         ?>
         <a href="https://twitter.com/share" class="twitter-share-button" data-text="<?php echo $text; ?>" data-via="@<?php echo $via; ?>" data-size="large" data-hashtags="<?php echo $hashtags; ?>">
 
-        <?php echo $btn_title; ?> </a>
+            <?php echo $btn_title; ?> </a>
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
         <?php
     }
@@ -412,7 +412,6 @@ class cwp_social_twitter {
         return $this;
     }
 
-
     public function set_user($user) {
         $this->user = $user;
         return $this;
@@ -423,41 +422,36 @@ class cwp_social_twitter {
         return $this;
     }
 
-
     public function __construct() {
 
     }
 
-    public static function factory(){
+    public static function factory() {
         return $factory = new cwp_social_twitter();
     }
 
+    public function embed_timelines($user, $timeline_id) {
 
-    public function embed_timelines($user,$timeline_id) {
+        add_action('wp_footer', array($this, 'timelines_js'));
 
-        add_action('wp_footer', array($this,'timelines_js'));
-
-       ob_start();?>
-            <a class="twitter-timeline" href="https://twitter.com/<?php echo $this->user  ?>" data-widget-id="<?php echo $this->timeline_widget_id ; ?>">
-                        <?php echo $this->timeline_title ?>
-            </a>
-        <?php
-        return $content = ob_get_clean();
-    }
-
-    public function timelines_js(){
-
+        ob_start();
         ?>
-         <script>
-         !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
-         </script>
-         <?php
+        <a class="twitter-timeline" href="https://twitter.com/<?php echo $this->user ?>" data-widget-id="<?php echo $this->timeline_widget_id; ?>">
+        <?php echo $this->timeline_title ?>
+        </a>
+            <?php
+            return $content = ob_get_clean();
+        }
 
+        public function timelines_js() {
+            ?>
+        <script>
+        !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+        </script>
+        <?php
     }
 
 }
-
-
 
 /**
  * Description of cwp_social_fb
@@ -517,28 +511,28 @@ class cwp_social_fb {
             fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));
             </script>
-                 <?php
-             endif;
-         }
+            <?php
+        endif;
+    }
 
-         /**
-          * <?php
-          * $title "Comment and Share on Facebook"
-          * cwp_social_fb::factory('010101010','So what do you think',800,5,'dark);
-          * ?>
-          * @param type $app_id
-          * @param type $title
-          * @param type $width
-          * @param type $post
-          * @param type $colorscheme
-          * @param type $url
-          * @return type
-          */
-         public function fb_comment($title = "Share your thoughts", $width = 600, $post = 10, $colorscheme = 'light', $url = null) {
-             $siteurl = isset($url) ? $url : get_permalink();
-             add_action('wp_footer', array($this, 'fb_script'));
-             ob_start();
-             ?>
+    /**
+     * <?php
+     * $title "Comment and Share on Facebook"
+     * cwp_social_fb::factory('010101010','So what do you think',800,5,'dark);
+     * ?>
+     * @param type $app_id
+     * @param type $title
+     * @param type $width
+     * @param type $post
+     * @param type $colorscheme
+     * @param type $url
+     * @return type
+     */
+    public function fb_comment($title = "Share your thoughts", $width = 600, $post = 10, $colorscheme = 'light', $url = null) {
+        $siteurl = isset($url) ? $url : get_permalink();
+        add_action('wp_footer', array($this, 'fb_script'));
+        ob_start();
+        ?>
         <div class="fb-comment-box">
             <h3><?php echo $title ?></h3>
             <div class="fb-comments" data-href="<?php echo $siteurl ?>" data-num-posts="<?php echo $post ?>" data-colorscheme="<?php echo $colorscheme ?>" data-width="<?php echo $width ?>"></div>
@@ -702,15 +696,23 @@ class core_functions {
      * @link http://www.kriesi.at/archives/how-to-build-a-wordpress-post-pagination-without-plugin
      * @link http://design.sparklette.net/teaches/how-to-add-wordpress-pagination-without-a-plugin/
      */
-    public static function pagination($pages = '', $range = 4) {
-        global $wp_query;
+    public static function pagination($wp_query = null) {
+        if (!isset($wp_query))
+            global $wp_query;
+        //set the paging methods
+        if (is_front_page()):
+            $paged = (get_query_var('page')) ? get_query_var('page') : 1;
+        else :
+            $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+        endif;
+
         if ($wp_query->max_num_pages > 1) :
             echo '<div class="wp-pagination">';
             $big = 999999999;
             echo paginate_links(array(
                 'base' => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
                 'format' => '?paged=%#%',
-                'current' => max(1, get_query_var('paged')),
+                'current' => max(1, $paged),
                 'total' => $wp_query->max_num_pages
             ));
             echo '</div>';

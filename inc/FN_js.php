@@ -77,7 +77,13 @@ abstract class FN_js {
 class FN_js_masonry extends FN_js {
 
     private $container_id = 'masonry',
-            $item_selector = 'span4';
+            $item_selector = 'span4',
+            $columns = 3;
+
+    public function set_columns($columns) {
+        $this->columns = $columns;
+        return $this;
+    }
 
     public function set_container_id($container_id) {
         $this->container_id = $container_id;
@@ -99,15 +105,32 @@ class FN_js_masonry extends FN_js {
     }
 
     public function __construct($class_name) {
+
+        /*
+         * add masonry-page calls to the body
+         */
+        add_filter('body_class', array($this, 'masonry_page'));
         $this->set_container_name($class_name);
     }
 
     public static function factory($class_name = 'masonry'){
         $factory = new FN_js_masonry($class_name);
+        $factory->enqueue_scripts();
         return $factory;
     }
 
-    public function run_masonry($container_id = 'masonry', $item_selector = 'span4'){
+    public function masonry_page($classes){
+        $classes[] = 'masonry-page';
+        return $classes;
+    }
+
+    /**
+     * run masonry
+     * @param type $item_selector
+     * @param type $container_id
+     * @return \FN_js_masonry
+     */
+    public function run_masonry($item_selector = 'span4',$container_id = 'masonry' ){
         $this->container_id = $container_id;
         $this->item_selector = $item_selector;
         $this->run();
@@ -116,37 +139,45 @@ class FN_js_masonry extends FN_js {
     }
 
     public function enqueue_scripts() {
-        wp_register_script('masonry', $this->locate_in_library('jquery.wookmark.min.js', 'masonry'), array('jquery'));
+        wp_register_script('masonry', $this->locate_in_library('jquery.masonry.min.js', 'masonry'), array('jquery'));
         if (!is_admin()) wp_enqueue_script('masonry');
     }
 
     public function footer_scripts() {
         ?>
  <!-- Once the page is loaded, initalize the plug-in. -->
-  <script type="text/javascript">
-   jQuery.noConflict();
-     (function($) {
-     $(window).load(function(){
-         $('#<?php echo $this->get_container_name();  ?>').masonry({
-			//columnWidth: 350,
-			animate: true,
-			itemSelector: '.<?php echo $this->item_selector  ?>'
-		},
-		function() { $(this).css({
-			margin: '0 0 80px 0'
-			});
-		});
-	});
-        })(jQuery);
+                 <script type="text/javascript">
+             jQuery.noConflict();
+             (function($) {
+                 $(window).load(function(){
+                     $('#<?php echo $this->get_container_name(); ?>').masonry({
+                         itemSelector: '.<?php echo $this->item_selector ?>',
+                         // set columnWidth a fraction of the container width
+                         columnWidth: function( containerWidth ) {
+                             return containerWidth / <?php echo $this->columns; ?>;
+                         }
 
-  </script>
+                     },
+                     function() { $(this).css({
+                             //margin: '0 0 80px 0'
+                         });
+                     });
+                 });
+             })(jQuery);
+
+         </script>
         <?php
 
     }
 
+
+
     public function head_scripts() {
         return false;
     }
+
+
+
 
 }
 
@@ -363,8 +394,8 @@ class FN_js_adipoli extends FN_js {
     }
 
     public function enqueue_scripts() {
-        wp_register_script('adipoli', $this->locate_in_library('jquery.adipoli.min.js', 'adipoli-v2'), array('jquery'));
-        wp_register_style('adipoli-style', $this->locate_in_library('adipoli.css', 'adipoli-v2'));
+        wp_register_script('adipoli', cwp::locate_in_library('jquery.adipoli.min.js', 'adipoli-v2'), array('jquery'),false,TRUE);
+        wp_register_style('adipoli-style', cwp::locate_in_library('adipoli.css', 'adipoli-v2'));
         wp_enqueue_script('adipoli');
         wp_enqueue_style('adipoli-style');
     }
@@ -372,9 +403,9 @@ class FN_js_adipoli extends FN_js {
     public function footer_scripts() {
         ?>
         <script type="text/javascript" charset="utf-8">
-            jQuery.noConflict();
-        jQuery(document).ready(function() {
-            jQuery('.<?php echo $this->get_container_name(); ?>').adipoli({
+
+        jQuery(document).ready(function($) {
+            $('.<?php echo $this->get_container_name(); ?>').adipoli({
                 'startEffect' : '<?php echo $this->startEffect ; ?>',
                 'hoverEffect' : '<?php echo $this->hoverEffect ?>'
             });

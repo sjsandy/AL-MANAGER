@@ -1,6 +1,4 @@
 <?php
-
-
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -23,9 +21,9 @@
  */
 class Ext_WPNavs {
 
-     private $menu,
+    private $menu,
             $theme_location = 'primary',
-            $fallback_cb = array('EXT_WPNavs','default_menu'),
+            $fallback_cb = array('EXT_WPNavs', 'default_menu'),
             $depth = 0,
             $link_before = '',
             $link_after = '',
@@ -126,7 +124,6 @@ class Ext_WPNavs {
         return $this;
     }
 
-
     public function __construct() {
 
     }
@@ -135,8 +132,8 @@ class Ext_WPNavs {
      * Factory pattern
      * @return \EXT_WPNavs
      */
-    public function add(){
-        return $factory = new EXT_WPNavs();
+    public function add() {
+        return $factory = new Ext_WPNavs();
     }
 
     /**
@@ -166,9 +163,8 @@ class Ext_WPNavs {
         return $this;
     }
 
-
-    public function add_loginout(){
-        add_filter('wp_nav_menu_items', array($this,'loginout'),10, 2 );
+    public function add_loginout() {
+        add_filter('wp_nav_menu_items', array($this, 'loginout'), 10, 2);
     }
 
     /**
@@ -188,10 +184,9 @@ class Ext_WPNavs {
 
     /**
      */
-    public function add_search(){
-        add_filter('wp_nav_menu_items', array($this,'add_search_box'));
+    public function add_search() {
+        add_filter('wp_nav_menu_items', array($this, 'add_search_box'));
     }
-
 
     /**
      *
@@ -201,14 +196,20 @@ class Ext_WPNavs {
      * @return type
      */
     public function add_search_box($items, $args) {
-        if ($args->theme_location == $location)
-            return $items . "<li class='menu-header-search'><form action='http://example.com/' id='searchform' method='get'><input type='text' name='s' id='s' placeholder='" . __('Search', 'corewp') . "></form></li>";
+        ob_start();
+        ?>
+        <form class="navbar-search pull-right" method="get" id="searchform" action="<?php echo esc_url(home_url('/')); ?>" role="search">
+            <input type="text" class="search-query" name="s" id="s" placeholder="<?php esc_attr_e('Search &hellip;', 'bj'); ?>" />
+            <input type="submit" class="submit" name="submit" id="searchsubmit" value="<?php esc_attr_e('Search', 'bj'); ?>" />
+        </form>
+        <?php
+        $form = ob_get_clean();
+        if ($args->theme_location == $this->theme_location)
+            return $items .= $form;
         return $items;
     }
 
 }
-
-
 
 class nav_walker extends Walker_Nav_Menu {
     // http://wordpress.stackexchange.com/questions/14037/menu-items-description/14039#14039
@@ -275,6 +276,4 @@ class nav_walker extends Walker_Nav_Menu {
     }
 
 }
-
-
 

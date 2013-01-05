@@ -104,12 +104,12 @@ class BJ_MCE_Editor extends WP_Widget {
 
 
             $args = array(
-                'teeny' => true,
                 'textarea_name' => $this->get_field_name('bj_mce_content'),
                 'textarea_rows' => 25,
-                'teeny' => true
+                //'teeny' => true
             ); // Optional arguments.
-            wp_editor($content, $this->get_field_id('bj_mce_content'), $args);
+           wp_editor($content, $this->get_field_id('bj_mce_content'), $args);
+           // the_editor($content, $this->get_field_id('bj_mce_content'));
             ?>
         </p>
 

@@ -35,7 +35,19 @@ class cwp_taxonomy {
     private $rewrite = array('slug' => 'name');
     private $taxonomy_name, $label_name;
     private $post_types = array('post', 'pages'),
-            $singular_name = null;
+            $singular_name = null,
+            $show_admin_col = false;
+
+    public function set_label_name($label_name) {
+        $this->label_name = $label_name;
+        return $this;
+    }
+
+    public function set_show_admin_col($show_admin_col) {
+        $this->show_admin_col = $show_admin_col;
+        return $this;
+    }
+
 
     public function set_singular_name($singular_name) {
         $this->singular_name = $singular_name;
@@ -158,6 +170,7 @@ class cwp_taxonomy {
             'rewrite' => array('slug' => $this->get_taxonomy_name()),
             'show_tagcloud' => $this->get_show_tagcloud(),
             'show_in_nav_menus' => $this->get_show_in_nav_menus(),
+            'show_admin_column' => true,
         ));
     }
 

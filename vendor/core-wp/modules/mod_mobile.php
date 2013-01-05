@@ -64,9 +64,9 @@ class mod_mobile extends Mobile_Detect {
      */
     public function isPhone() {
         if ($this->isMobile() AND !$this->isTablet()):
-            return true;
+            return TRUE;
         else:
-            return false;
+            return FALSE;
         endif;
     }
 
@@ -108,13 +108,32 @@ class mod_mobile extends Mobile_Detect {
      * adds a mobile class to the body
      */
     public static function mobile_class(){
-        if(mod_mobile::detect()->isMobile()) add_filter( 'body_class', array('mod_mobile','add_mobile_class'));
+        add_filter( 'body_class', array('mod_mobile','add_mobile_classes'));
     }
 
     public function add_mobile_class($classes){
         $classes[] = 'mobile';
      return $classes;
     }
+
+
+    public function add_mobile_classes($class){
+
+        //detect if is mobile device
+        if(mod_mobile::detect()->isMobile()) $class[] = 'mobile';
+        //mobile phone
+        if(mod_mobile::detect()->isPhone()) $class[] = 'phone';
+        //is tabler
+        if(mod_mobile::detect()->isTablet()) $class[] = 'tablet';
+        //is android
+        if(mod_mobile::detect()->isAndroidOS()) $class[] = 'android';
+        //is iOS
+        if(mod_mobile::detect()->isiOS()) $class[] = 'ios';
+        //return class
+        return $class;
+
+    }
+
 
 }
 

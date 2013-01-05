@@ -10,9 +10,10 @@ AutoLoad Manager is a simple PHP,  class / interface auto-load manager for WordP
 
 == Description ==
 
-A simple PHP classes / interface auto-load manager ( http://autoloadmanager.shawnsandy.com/ ) for wordpress, built with PHP-Autoload-Manager by http://bashar.alfallouji.com/php-autoload-manager/. AL-Manager allows you to easily extend the power of WordPress using Object Oriented PHP, classes and libraries.
+A simple PHP classes / interface auto-load manager for wordpress, built with PHP-Autoload-Manager by http://bashar.alfallouji.com/php-autoload-manager/. AL-Manager allows you to easily extend the power of WordPress using PHP, classes and libraries.
 
 =Developer Info =
+=Autoload Manager (Developer Info) =
 
 The AutoLoad Manager is a generic autoloader that can be used with any PHP framework or library. Using the PHP tokenizer mechanism, it will parse folder(s) and discover the different classes and interfaces defined. The big advantage of using this autoloadManager is that it will allow you to implement whatever naming rules you want and may have mutliple classes in one file (if you want to have a such feature).
 
@@ -44,8 +45,8 @@ if(class_exists('almanager')) add_filter('alm_filter', 'al_paths');
 
 //sample fliter adds 'inc' dir to the autoload paths
 function al_paths($folders) {
-    $dir = array(AL_DIR . '/library/phpfour-payment');
-    $folders = array_merge($dir, $folders);
+    $p = array(AL_DIR . '/library/phpfour-payment');
+    $folders = array_merge($p, $folders);
     return $folders;
 }
 
@@ -101,7 +102,7 @@ PHPFOUR-Payment : PHP Payment Library for Paypal, Authorize.net and 2Checkout : 
 
 FACEBOOK-SDK : allows you to access Facebook Platform from your PHP app : https://github.com/facebook/php-sdk
 
-More...
+CORE-WP A WordPress Theme Toolkit
 
 For more classes/ libraries please visit http://autoloadmanger.shawnandy.com
 

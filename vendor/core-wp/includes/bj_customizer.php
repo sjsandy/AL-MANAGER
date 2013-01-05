@@ -1,14 +1,11 @@
 <?php
-
 /**
  * The file description. *
  * @package BJ
  * @since BJ 1.0
  */
-
-
 // Prevent loading this file directly
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 class bj_customizer {
 
@@ -38,7 +35,7 @@ class bj_customizer {
 //        if (!file_exists($bj_background))
 //            $bj_background = '';
         $bj_theme_background = array(
-            'default-color' => 'FFFFFF',
+            'default-color' => '',
             'default-image' => $background_image,
             'wp-head-callback' => '_custom_background_cb',
             'admin-head-callback' => '',
@@ -84,7 +81,7 @@ class bjc_branding {
 
     public function customize($wp_customize) {
         $wp_customize->add_section('bj_branding_section', array(
-            'title' => 'Brand',
+            'title' => 'Social Media',
             'priority' => 100,
             'description' => __('This section takes care of you Site Logo and online branding, fan-page, twitter url, google plus url etc', 'bj')
         ));
@@ -95,18 +92,18 @@ class bjc_branding {
         ));
 
         $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'bjc_logo', array(
-                    'label' => 'Site Logo',
-                    'section' => 'bj_branding_section',
+                    'label' => 'Organization(s) Logo ',
+                    'section' => 'header_image',
                     'settings' => 'bjc_logo'
                 )));
 
 
-        $wp_customize->add_setting('bjc_twitter_url', array(
+        $wp_customize->add_setting('bjc_twitter_username', array(
             'default' => '',
         ));
 
-        $wp_customize->add_control('bjc_twitter_url', array(
-            'label' => 'Twitter Url',
+        $wp_customize->add_control('bjc_twitter_username', array(
+            'label' => 'Twitter Username',
             'section' => 'bj_branding_section',
             'type' => 'text',
         ));
@@ -129,6 +126,17 @@ class bjc_branding {
 
         $wp_customize->add_control('bjc_gplus_url', array(
             'label' => 'Google Plus Url',
+            'section' => 'bj_branding_section',
+            'type' => 'text',
+        ));
+
+
+        $wp_customize->add_setting('bjc_gplus_page', array(
+            'default' => '',
+        ));
+
+        $wp_customize->add_control('bjc_gplus_page', array(
+            'label' => 'Google Plus Page URL',
             'section' => 'bj_branding_section',
             'type' => 'text',
         ));
@@ -169,10 +177,10 @@ class bjc_contact {
 
 
         $customize->add_setting('bjc_contact_message', array(
-            'default' => __("Please don't hesitate to contact us for more info!",'basejump'),
+            'default' => __("Please don't hesitate to contact us for more info!", 'basejump'),
         ));
 
-         $customize->add_control(new BJC_Editor_Control($customize, 'bjc_contact_message', array(
+        $customize->add_control(new BJC_Editor_Control($customize, 'bjc_contact_message', array(
                     'label' => 'Contact Message / Copy',
                     'section' => 'bjc_contact',
                     'settings' => 'bjc_contact_message',
@@ -284,8 +292,8 @@ class bjc_copy_editor {
         ));
 
         $customize->add_setting('bjc_site_slug', array(
-            'default' => 'The super cool SiteSlug or as the guys in marketing call it, elevator pitch',
-            'type' => 'option'
+            'default' => 'Add your super cool SiteSlug or as the guys in marketing call it... Your elevator pitch!',
+                //'type' => 'option'
         ));
 
         $customize->add_control(new BJC_Editor_Control($customize, 'bjc_site_slug', array(
@@ -294,10 +302,10 @@ class bjc_copy_editor {
                     'settings' => 'bjc_site_slug'
                 )));
 
-        /************/
+        /*         * ********* */
         $customize->add_setting('bjc_404_slug', array(
             'default' => 'It looks like nothing was found at this location. Maybe try one of the links below or a search?',
-            'type' => 'option'
+                //'type' => 'option'
         ));
 
         $customize->add_control(new BJC_Editor_Control($customize, 'bjc_404_slug', array(
@@ -306,10 +314,10 @@ class bjc_copy_editor {
                     'settings' => 'bjc_404_slug'
                 )));
 
-        /************/
+        /*         * ********* */
         $customize->add_setting('bjc_search_slug', array(
             'default' => 'Sorry, but nothing matched your search terms. Please try again with some different keywords.',
-            'type' => 'option'
+                //'type' => 'option'
         ));
 
         $customize->add_control(new BJC_Editor_Control($customize, 'bjc_search_slug', array(
@@ -318,11 +326,11 @@ class bjc_copy_editor {
                     'settings' => 'bjc_search_slug'
                 )));
 
-        /************/
+        /*         * ********* */
 
         $customize->add_setting('bjc_footer_slug', array(
             'default' => 'Here is your footer sulg ',
-
+                //'type' => 'option'
         ));
 
         $customize->add_control(new BJC_Editor_Control($customize, 'bjc_footer_slug', array(
@@ -334,7 +342,6 @@ class bjc_copy_editor {
 
         $customize->add_setting('bjc_copyright_slug', array(
             'default' => 'Here is your copyright info',
-
         ));
 
         $customize->add_control(new BJC_Editor_Control($customize, 'bjc_copyright_slug', array(
@@ -344,20 +351,20 @@ class bjc_copy_editor {
                     'type' => 'bjc_wp_editor'
                 )));
 
-        $customize->add_setting('bjc_enable_copyinfo',array(
-           'default' => '',
-
+        $customize->add_setting('bjc_enable_copyinfo', array(
+            'default' => '',
+                //'type' => 'option'
         ));
 
-        $customize->add_control('bjc_enable_copyinfo',array(
-           'label' => 'Hide Copyright Info' ,
+        $customize->add_control('bjc_enable_copyinfo', array(
+            'label' => 'Hide Copyright Info',
             'section' => 'bjc_slug',
             'type' => 'checkbox'
         ));
 
         $customize->add_setting('bjc_copyright_slug', array(
             'default' => 'Here is your footer copy',
-
+                //'type' => 'option'
         ));
 
         $customize->add_control(new BJC_Editor_Control($customize, 'bjc_copyright_slug', array(
@@ -369,18 +376,63 @@ class bjc_copy_editor {
 
 }
 
+class bjc_theme_settings {
+
+    public function __construct() {
+        add_action('customize_register', array($this, 'customize'));
+    }
+
+    public static function factory() {
+        $factory = new bjc_theme_settings();
+        return $factory;
+    }
+
+    public function customize($customize) {
+        $customize->add_section('bjc_theme_settings', array(
+            'title' => 'Custom Settings',
+            'priority' => 105,
+            'description' => "Manage theme settings"
+        ));
+
+//        $customize->add_setting('theme-admin',array(
+//            'default' => 'Default theme admin'
+//        ));
+//
+//        $customize->add_control('theme-admin',array(
+//            'section' => 'bjc_theme_settings',
+//            'label' => 'Theme Admin',
+//            'type' => 'text'
+//        ));
+
+        $customize->add_setting('theme-admin', array(
+            'default' => 'Default Theme Admin',
+        ));
+
+        $customize->add_control(new Selected_Users_Control($customize, 'theme-admin', array(
+                    'label' => "Select Default ThemeAdmin",
+                    'section' => 'bjc_theme_settings',
+                    'settings' => 'theme-admin',
+                    'description' => 'A Theme(s) admin user profile are used for themes socials links, contact info, about(us), etc',
+                    'query' => array('role' => 'administrator')
+                )));
+    }
+
+}
+
 if (class_exists('WP_Customize_Control')):
 
-    class Example_Customize_Textarea_Control extends WP_Customize_Control {
+    class Info_Control extends WP_Customize_Control {
 
-        public $type = 'textarea';
+        public $type = 'info',
+                $info = 'Setion info';
 
         public function render_content() {
             ?>
             <label>
                 <span class="customize-control-title"><?php echo esc_html($this->label); ?></span>
-                <textarea rows="5" style="width:100%;" <?php $this->link(); ?>><?php echo esc_textarea($this->value()); ?></textarea>
+                <span class=""><?php echo $this->info ?></span>
             </label>
+
             <?php
         }
 
@@ -405,6 +457,85 @@ if (class_exists('WP_Customize_Control')):
 
     }
 
+    class Selected_Pages_Control extends WP_Customize_Control {
+
+        public $type = 'option';
+        public $args = array();
+        public $description = '';
+
+        public function render_content() {
+            $pgs = $this->page_array($this->args);
+            ?>
+            <label>
+                <span  class="customize-control-title" ><?php echo esc_html($this->label); ?></span>
+                <select <?php $this->link(); ?>>
+                    <option></option>
+            <?php foreach ($pgs as $key => $value): ?>
+                        <option value="<?php echo $key ?>" <?php echo ($key == $this->value() ? 'selected' : '') ?>>
+                        <?php echo $value; ?>
+                        </option>
+                        <?php endforeach; ?>
+                </select>
+                <span style="display: block"><?php echo esc_html($this->description) ?></span>
+            </label>
+            <?php
+        }
+
+        public function page_array($args = array()) {
+            /*
+             * get list of pages and output an associate array with post_name and post-title
+             * $pages['post_name'] = 'post_title';
+             */
+
+            $pages = get_pages();
+            foreach ($pages as $page) {
+                $pgs["{$page->ID}"] = $page->post_title;
+            }
+            return $pgs;
+        }
+
+    }
+
+    class Selected_Users_Control extends WP_Customize_Control {
+
+        public $type = 'option';
+        public $query = array('orderby' => 'nicename');
+        public $description = '';
+
+        public function render_content() {
+            $query = $this->query;
+            $pgs = $this->user_array($query);
+            ?>
+            <label>
+                <span  class="customize-control-title" ><?php echo esc_html($this->label); ?></span>
+                <select <?php $this->link(); ?>>
+                    <option></option>
+            <?php foreach ($pgs as $key => $value): ?>
+                        <option value="<?php echo $key ?>" <?php echo ($key == $this->value() ? 'selected' : '') ?>>
+                        <?php echo $value; ?>
+                        </option>
+                        <?php endforeach; ?>
+                </select>
+                <span style="display: block"><?php echo esc_html($this->description) ?></span>
+            </label>
+            <?php
+        }
+
+        public function user_array($args = '') {
+            /*
+             * get list of pages and output an associate array with post_name and post-title
+             * $pages['post_name'] = 'post_title';
+             */
+
+            $arrray = get_users($args);
+            foreach ($arrray as $items) {
+                $pgs["{$items->ID}"] = $items->user_nicename;
+            }
+            return $pgs;
+        }
+
+    }
+
     /**
      * @source http://ericjuden.com/2012/08/custom-taxonomy-control-for-the-theme-customizer/
      */
@@ -413,24 +544,40 @@ if (class_exists('WP_Customize_Control')):
         public $type = 'taxonomy_dropdown';
         var $defaults = array();
         public $args = array();
+        public $tax = 'category';
 
         public function render_content() {
+            // Call wp_dropdown_cats to ad data-customize-setting-link to select tag
+            add_action('wp_dropdown_cats', array($this, 'wp_dropdown_cats'));
+
+            // Set some defaults for our control
             $this->defaults = array(
                 'show_option_none' => __('None'),
                 'orderby' => 'name',
                 'hide_empty' => 0,
                 'id' => $this->id,
                 'selected' => $this->value(),
+                'taxonomy' => $this->tax
             );
 
+            // Parse defaults against what the user submitted
             $r = wp_parse_args($this->args, $this->defaults);
             ?>
             <label><span class="customize-control-title"><?php echo esc_html($this->label); ?></span></label>
             <?php
+            // Generate our select box
             wp_dropdown_categories($r);
         }
 
+        function wp_dropdown_cats($output) {
+            // Search for <select and replace it with <select data-customize=setting-link="my_control_id"
+            $output = str_replace('<select', '<select ' . $this->get_link(), $output);
+            return $output;
+        }
+
     }
+
+
 
 endif;
 
