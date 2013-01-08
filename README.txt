@@ -3,7 +3,7 @@ Contributors: shawnsandy.com
 Donate link:http://autoloadmanger.shawnandy.com
 Tags: autoload, OOP,
 Requires at least: 3.0
-Tested up to: 3.3
+Tested up to: 3.5
 Stable tag: trunk
 
 AutoLoad Manager is a simple PHP,  class / interface auto-load manager for WordPress, built with PHP-Autoload-Manager.

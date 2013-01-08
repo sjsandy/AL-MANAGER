@@ -61,6 +61,9 @@ class theme_content {
         self::tags('portfolio', 'cwp_portfolio');
         add_action('load-post.php', array('theme_content', 'folio_formats'));
         add_action('load-post-new.php', array('theme_content', 'folio_formats'));
+
+
+
     }
 
     public function folio_formats() {

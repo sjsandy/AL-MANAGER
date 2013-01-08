@@ -316,7 +316,8 @@ class BJ {
 
     public static function tweets($twitter_user = null, $quantity = 3) {
 
-        if(!isset($twitter_user)) $twitter_user = get_theme_mod('bjc_twitter_username', 'shawnsandy');
+        if (!isset($twitter_user))
+            $twitter_user = get_theme_mod('bjc_twitter_username', 'shawnsandy');
 
 
         include_once(ABSPATH . WPINC . '/feed.php');
@@ -335,12 +336,25 @@ class BJ {
                     ?>
                     <li>
                         <a href='<?php echo $item->get_permalink(); ?>'>
-                            <?php echo $item->get_title(); ?>
+                <?php echo $item->get_title(); ?>
                         </a>
                     </li>
-                <?php endforeach; ?>
+            <?php endforeach; ?>
         </ul>
         <?php
     }
 
+    public static function register_metaboxes($meta_boxes = array()) {
+
+        // Make sure there's no errors when the plugin is deactivated or during upgrade
+//	if ( !class_exists( 'RW_Meta_Box' ) && !is_array($meta_boxes) )
+//		return;
+
+
+        foreach ($meta_boxes as $meta_box) {
+            new RW_Meta_Box($meta_box);
+        }
+    }
+
 }
+
