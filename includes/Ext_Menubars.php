@@ -32,11 +32,18 @@ class Ext_Post_Menus {
 
     private $items = 10,
             $node_parent=false,
+            $parent_url='',
             $post_status = 'publish',
             $post_type = 'post',
             $post_types = false,
             $node_id = 'menu-node',
             $node_title = 'Menu Title';
+
+    public function set_parent_url($parent_url) {
+        $this->parent_url = $parent_url;
+        return $this;
+    }
+
 
     public function set_node_parent($node_parent) {
         $this->node_parent = $node_parent;
@@ -132,52 +139,17 @@ class Ext_Post_Menus {
 
     }
 
-    /**
-     * Display published post
-     * @param type $post_type
-     * @param type $items
-     */
-    public function published($post_type = 'post', $items = 10) {
-
-        $this->post_type = $post_type;
-        $this->items = $items;
-        $this->post_status = 'publish';
-        $this->add_nodes($this->node_id, $this->node_title);
-    }
 
     /**
-     * Display drafts
+     * Grabs the menus data form posts
      * @param type $post_type
+     * @param type $post_status
      * @param type $items
      */
-    public function drafts($post_type = 'post', $items = 10) {
+    public function menu_data($post_type = 'post',$post_status='publish', $items = 5){
         $this->post_type = $post_type;
         $this->items = $items;
-        $this->post_status = 'draft';
-        $this->add_nodes($this->node_id, $this->node_title);
-    }
-
-    /**
-     * Display schelude post
-     * @param type $post_type
-     * @param type $items
-     */
-    public function scheduled($post_type = 'post', $items = 10) {
-        $this->post_type = $post_type;
-        $this->items = $items;
-        $this->post_status = 'future';
-        $this->add_nodes($this->node_id, $this->node_title);
-    }
-
-    /**
-     * Display pending post
-     * @param type $post_type
-     * @param type $items
-     */
-    public function pending($post_type = 'post', $items = 10) {
-        $this->post_type = $post_type;
-        $this->items = $items;
-        $this->post_status = 'pending';
+        $this->post_status = $post_status;
         $this->add_nodes($this->node_id, $this->node_title);
     }
 
@@ -262,7 +234,7 @@ class Ext_Post_Menus {
             $args = array(
                 'id' => $this->node_id,
                 'title' => $this->node_title,
-                'href' => '#',
+                'href' => $this->parent_url,
                 'class' => 'ext-menubars-' . $this->node_id,
                 'meta' => array(
                     'class' => $this->node_id,
@@ -276,6 +248,9 @@ class Ext_Post_Menus {
         $wp_admin_bar->add_node($args);
 
 
+        /**
+         * child nodes
+         */
         //** get the post data **//
         if ($this->post_types)
             $data = $this->data_all();
@@ -286,6 +261,7 @@ class Ext_Post_Menus {
         /** Check the data and proceed * */
         //if (!$data OR !is_array($data))return false;
         //** loop thorugh the data and create the nodes **//
+
         foreach ($data as $item):
             if (current_user_can('edit_posts')):
                 $args = array(
