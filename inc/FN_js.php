@@ -193,8 +193,8 @@ class FN_js_curtains extends FN_js {
     }
 
     public static function factory($class_name ='curtains'){
-        $this->set_container_name($class_name);
         $factory = new FN_js_curtains();
+        $factory->set_container_name($class_name);
         return $factory;
     }
 

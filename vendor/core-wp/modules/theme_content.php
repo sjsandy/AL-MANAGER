@@ -62,8 +62,17 @@ class theme_content {
         add_action('load-post.php', array('theme_content', 'folio_formats'));
         add_action('load-post-new.php', array('theme_content', 'folio_formats'));
 
-
-
+        //instatiate BJ_Metaboxes
+        $details = BJ_METABOXES::factory();
+        //create meta box fields
+        $folio_fields[] = $details->text_field('_bj_folio_type', 'Project Type', 'Commercial, ProBono, Personal, Not For Profit');
+        $folio_fields[] = $details->text_field('_bj_folio_client', 'Client');
+        $folio_fields[] = $details->text_field('_bj_folio_url', 'Project URL');
+        //set metabox setting
+        $details->set_metabox_context('side');
+        $details->set_metabox_fields($folio_fields);
+        //create the metabox
+        $details->add_metabox('bj_folio_meta','Item Details',array('cwp_portfolio'));
     }
 
     public function folio_formats() {

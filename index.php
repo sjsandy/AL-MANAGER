@@ -18,6 +18,7 @@ include_once dirname(__FILE__) .'/al_manager.php' ;
  * instaniate the al_manger class
  */
 al_manager::instance()->autoload();
+wp_autoload::factory();
 
 //run al_manager on init;
 

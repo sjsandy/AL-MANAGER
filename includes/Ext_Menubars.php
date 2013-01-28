@@ -5,12 +5,9 @@
  *
  * @author studio
  */
-
 class Ext_Menubars {
 
-
 }
-
 
 /**
  * Quickly add post edits links to the Adminbar
@@ -25,14 +22,11 @@ class Ext_Menubars {
   Post_Menus::add()->set_node_id('custom_options')->set_node_title('UI.Options')->published('cwp_custom_options');
  * </code>
  */
-
-
 class Ext_Post_Menus {
 
-
     private $items = 10,
-            $node_parent=false,
-            $parent_url='',
+            $node_parent = false,
+            $parent_url = '',
             $post_status = 'publish',
             $post_type = 'post',
             $post_types = false,
@@ -44,12 +38,10 @@ class Ext_Post_Menus {
         return $this;
     }
 
-
     public function set_node_parent($node_parent) {
         $this->node_parent = $node_parent;
         return $this;
     }
-
 
     /**
      * Menu ID
@@ -139,14 +131,13 @@ class Ext_Post_Menus {
 
     }
 
-
     /**
      * Grabs the menus data form posts
      * @param type $post_type
      * @param type $post_status
      * @param type $items
      */
-    public function menu_data($post_type = 'post',$post_status='publish', $items = 5){
+    public function menu_data($post_type = 'post', $post_status = 'publish', $items = 5) {
         $this->post_type = $post_type;
         $this->items = $items;
         $this->post_status = $post_status;
@@ -169,7 +160,7 @@ class Ext_Post_Menus {
                 AND
                 $wpdb->posts.post_type = '$this->post_type'
                 ORDER BY $wpdb->posts.ID DESC LIMIT $this->items";
-        $query = $wpdb->get_results($qry,OBJECT);
+        $query = $wpdb->get_results($qry, OBJECT);
         return $query;
     }
 
@@ -211,10 +202,9 @@ class Ext_Post_Menus {
      */
     public function nodes($wp_admin_bar) {
 
- //@todo fix node title seperate from meta > title
-
+        //@todo fix node title seperate from meta > title
         //** parent node **//
-        $parent = $this->node_parent ? $this->node_parent : $this->node_id ;
+        $parent = $this->node_parent ? $this->node_parent : $this->node_id;
 
 
         // sets a parent or child node
@@ -222,7 +212,7 @@ class Ext_Post_Menus {
             /*             * * parent node ** */
             $args = array(
                 'id' => $this->node_id,
-                'title' => '<span class="apm-child" style="text-shadow: none; font-weight:bold">' . $this->node_title .'</span>',
+                'title' => '<span class="apm-child" style="text-shadow: none; font-weight:bold">' . $this->node_title . '</span>',
                 'class' => 'ext-menubars-' . $this->node_id,
                 'parent' => $parent,
                 'meta' => array(
@@ -245,12 +235,13 @@ class Ext_Post_Menus {
 
 
 
+        /**
+         * parent nodes
+         */
         $wp_admin_bar->add_node($args);
 
 
-        /**
-         * child nodes
-         */
+
         //** get the post data **//
         if ($this->post_types)
             $data = $this->data_all();
@@ -275,6 +266,9 @@ class Ext_Post_Menus {
                     )
                 );
 
+                /**
+                 * child nodes
+                 */
                 $wp_admin_bar->add_node($args);
             endif;
         endforeach;

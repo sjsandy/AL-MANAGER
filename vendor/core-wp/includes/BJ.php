@@ -113,6 +113,7 @@ class BJ {
         else :
             echo "Flickr ID required";
         endif;
+        
     }
 
     /**
@@ -191,13 +192,13 @@ class BJ {
 
         if (isset($size['phone']))
             echo $content = '<figure class="img-placeholder visible-phone" ><img  data-src="holder.js/' . $size['phone'] . '/' . $color . '/' . $text . '"></figure>';
+
     }
 
     /**
      * display a default post thumbnail.
      */
     public static function default_post_thumbanils() {
-
         add_filter('post_thumbnail_html', array('BJ', 'default_thumbnail'));
     }
 

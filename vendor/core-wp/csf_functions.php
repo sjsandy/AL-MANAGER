@@ -87,7 +87,7 @@ function cwp_theme_setup() {
 
     add_image_size('icon-60', 60, 60, true);
     add_image_size('icon-120', 120, 120, true);
-    add_image_size('icon-80', 80, 20, true);
+    add_image_size('icon-80', 80, 00, true);
 
     /* Move the WordPress generator to a better priority. */
     remove_action('wp_head', 'wp_generator');
@@ -109,7 +109,7 @@ function cwp_icon_images($sizes) {
     $isizes = array(
         "icon-60" => __('Icon small', 'basejump'),
         "icon-80" => __('Icon medium', 'basejump'),
-        "icon-100" => __('Icon large', 'basejump'),
+        "icon-120" => __('Icon large', 'basejump'),
     );
     $imgs = array_merge($sizes, $isizes);
     return $imgs;
