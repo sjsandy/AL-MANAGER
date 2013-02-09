@@ -2,7 +2,7 @@
 
 /**
  * Description of BJ_POSTGALLERY
- * Greate gallaries using wp_query
+ * ceate gallaries using wp_query
  *
  * @author studio
  */

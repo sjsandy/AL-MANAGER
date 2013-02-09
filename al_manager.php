@@ -68,6 +68,7 @@ class al_manager {
         //default folder
         //*******THEME VENDOR DIRECTORY********
         $folders[] = AL_DIR . '/includes/';
+        $folders[] = AL_DIR . '/inc/';
         $folders[] = WP_PLUGIN_DIR . '/al-manager/vendor/';
         if (file_exists(get_stylesheet_directory() . '/vendor/'))
             $folders[] = get_stylesheet_directory() . '/vendor/';

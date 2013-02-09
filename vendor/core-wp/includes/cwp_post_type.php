@@ -32,7 +32,7 @@ class cwp_post_type {
             $label = null,
             $post_formats = array(),
             $show_in_nav_menus = true,
-            $taxonomies = array('post_tag', 'category');
+            $taxonomies = array('category','post_tag');
 
     public function set_show_in_nav_menus($show_in_nav_menus) {
         $this->show_in_nav_menus = $show_in_nav_menus;
@@ -258,6 +258,17 @@ class cwp_post_type {
         return $this;
     }
 
+
+    public function category_tags_metabox(){
+        add_action('init', array($this,'_category_tags_metabox'));
+    }
+
+
+    public function _category_tags_metabox() {
+    register_taxonomy_for_object_type('category', 'cwp_'. $this->post_type_name);
+    register_taxonomy_for_object_type('post_tag', 'cwp_'.$this->post_type_name);
+    }
+
     /**
      * register you post type
      */
@@ -285,6 +296,7 @@ class cwp_post_type {
         );
 
         if (isset($this->capabilities)):
+            $capability_type = $this->post_type_name;
             //use the default by setting the capabilities using a boolean true;
             if(!is_array($this->capabilities)):
             //******************************************************************
@@ -370,8 +382,8 @@ class cwp_post_type {
         /* If the administrator role exists, add required capabilities for the plugin. */
         if (!empty($role)) {
 
-            $role->add_cap("manage_{$this->capabilities}s");
-            $role->add_cap("edit_{$this->capabilities}s");
+            $role->add_cap("manage_{$this->post_type_name}s");
+            $role->add_cap("edit_{$this->post_type_name}s");
         }
     }
 

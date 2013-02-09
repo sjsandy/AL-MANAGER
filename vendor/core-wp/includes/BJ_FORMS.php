@@ -1,5 +1,4 @@
 <?php
-
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -19,10 +18,15 @@ class BJ_FORMS {
 
     // Get a key from https://www.google.com/recaptcha/admin/create
 
-            private $captacha,
+            protected $captacha,
             $nonce,
             $publickey,
-            $privatekey;
+            $privatekey,
+            $theme = null;
+
+    public function set_theme($theme) {
+        $this->theme = $theme;
+    }
 
     public function set_captacha($captacha) {
         return $this->captacha = $captacha;
@@ -66,12 +70,41 @@ class BJ_FORMS {
 
     }
 
-    public static function factory($publickey, $privatekey, $nonce = 'bj_nonce') {
+    /**
+     * Factory patterm
+     *
+     * @param type $publickey - recaptcah public key
+     * @param type $privatekey - recaptcha private key
+     * @param type $nonce - wordpress nonce key : default bj_nonce ;
+     * @param string $theme reCaptha theme name 'red' | 'white' | 'blackglass' | 'clean' | 'custom'
+     * @return \BJ_FORMS
+     */
+    public static function factory($publickey, $privatekey, $nonce = 'bj_nonce', $theme = null) {
         $factory = new BJ_FORMS();
         //setup recaptcha
         $factory->nonce = $nonce;
         $factory->captacha = recaptcha::instance($publickey, $privatekey);
+        if (isset($theme)) :
+            $factory->theme = $theme;
+            $factory->load_theme();
+        endif;
         return $factory;
+    }
+
+    public function load_theme() {
+        add_action('wp_head', array($this, 'theme'));
+    }
+
+    public function theme() {
+
+        ?>
+        <script type="text/javascript">
+            var RecaptchaOptions = {
+                theme : '<?php $this->theme ?>'
+            };
+        </script>
+        <?php
+
     }
 
     public function nonce() {
@@ -186,10 +219,12 @@ class BJ_Contact_Us {
 
     }
 
-    public static function factory() {
+    public static function factory($notify_subject = "RE : Contact/Information", $notify_message = null) {
+        if (!isset($notify_message))
+            $notify_message = "Thank you for your inquiry, a response will be sent to you shortly.";
         $factory = new BJ_Contact_Us();
-        $factory->notification_subject = 'RE: Inquires';
-        $factory->notification_message = "<p>Thank you for your inquiry, rest assured a response will be sent to you shortly.</p><p> Regards - {$factory->notifier_name}<p>";
+        $factory->notification_subject = $notify_subject;
+        $factory->notification_message = "<p>{$notify_message}</p><p> Regards - {$factory->notifier_name}<p>";
         return $factory;
     }
 
@@ -232,8 +267,8 @@ class BJ_Contact_Us {
                 $headers[] = "From: {$notifier->display_name} <{$notifier->user_email}>";
                 $headers[] = "Bcc: {$notifier->user_mail} ";
                 $send_mail = wp_mail($data['email'], $this->notification_subject, $this->notification_message, $headers);
-                if (!$send_mail){
-                    update_post_meta($post,'mail_confirmation','Failed');
+                if (!$send_mail) {
+                    update_post_meta($post, 'mail_confirmation', 'Failed');
                     wp_mail($notifier->user_email, 'Contact notification failed', $post['post_title'], $headers);
                 }
 

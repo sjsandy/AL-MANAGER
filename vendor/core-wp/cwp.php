@@ -33,38 +33,34 @@ function cwp_autoLoader($class) {
 
     if (file_exists(get_stylesheet_directory() . '/core-wp/modules/' . $class . '.php')):
         require_once get_stylesheet_directory() . '/core-wp/modules/' . $class . '.php';
-
     endif;
 
     if (file_exists(get_template_directory() . '/core-wp/modules/' . $class . '.php')):
         require_once get_template_directory() . '/core-wp/modules/' . $class . '.php';
-
     endif;
 
     if (file_exists(WP_PLUGIN_DIR . '/core-wp/modules/' . $class . '.php')):
         require_once WP_PLUGIN_DIR . '/core-wp/modules/' . $class . '.php';
-
     endif;
+
     if (file_exists(WP_PLUGIN_DIR . '/core-wp/includes/' . $class . '.php')):
         require_once WP_PLUGIN_DIR . '/core-wp/includes/' . $class . '.php';
-
     endif;
 
     if (file_exists(get_stylesheet_directory() . '/core-wp/modules/core_' . $class . '.php')):
         require_once get_stylesheet_directory() . '/core-wp/modules/core_' . $class . '.php';
-
     endif;
+
     if (file_exists(get_template_directory() . '/core-wp/modules/core_' . $class . '.php')):
         require_once get_template_directory() . '/core-wp/modules/core_' . $class . '.php';
-
     endif;
+
     if (file_exists(WP_PLUGIN_DIR . '/core-wp/modules/core_' . $class . '.php')):
         require_once WP_PLUGIN_DIR . '/core-wp/modules/core_' . $class . '.php';
-
     endif;
+
     if (file_exists(WP_PLUGIN_DIR . '/core-wp/includes/core_' . $class . '.php')):
         require_once WP_PLUGIN_DIR . '/core-wp/includes/core_' . $class . '.php';
-
     endif;
 }
 

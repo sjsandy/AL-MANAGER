@@ -12,7 +12,7 @@
 class BJ_POSTDATA {
 
     private $query = null,
-            $wp_query = array('showposts' => 5),
+            $wp_query = array('posts_per_page' => 5),
             $query_thumbnail_posts = array('meta_key' => '_thumbnail_id', 'showposts' => 5, 'post_type' => 'post'),
             $template_name = '',
             $template_slug = 'content',
@@ -114,9 +114,9 @@ class BJ_POSTDATA {
      * run query
      */
     public function loop() {
-        //global $post;
-        if (isset($this->query))
-            query_posts($this->query);
+
+        $this->get_post();
+
         if (have_posts()):
             while (have_posts()):
                 the_post();
@@ -135,6 +135,26 @@ class BJ_POSTDATA {
             bj_layout::get_template_part($this->blank_tpl, $this->blank_tpl_name ,  $this->base_directory);
         endif;
         wp_reset_query();
+    }
+
+    /**
+     * runs the pre_get_post for queries in the loop
+     */
+    public function get_post(){
+      /**
+         * built the query using pre_get_post@link URL description
+         */
+        if (isset($this->query)):
+           add_action( 'pre_get_posts', array($this,'modify_loop') );
+        endif;
+    }
+
+    public function modify_loop($query){
+        if($query->is_main_query()):
+            foreach($this->query as $key => $value):
+            $query->set($key,$value);
+            endforeach;
+        endif;
     }
 
     /**

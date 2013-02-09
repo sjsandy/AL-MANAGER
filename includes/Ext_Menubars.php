@@ -209,10 +209,10 @@ class Ext_Post_Menus {
 
         // sets a parent or child node
         if ($this->node_parent):
-            /*             * * parent node ** */
+            /*             * * parent node seperator ** */
             $args = array(
                 'id' => $this->node_id,
-                'title' => '<span class="apm-child" style="text-shadow: none; font-weight:bold">' . $this->node_title . '</span>',
+                'title' => '<span class="apm-child" style="text-shadow: none; font-weight:normal">' . $this->node_title . '</span>',
                 'class' => 'ext-menubars-' . $this->node_id,
                 'parent' => $parent,
                 'meta' => array(

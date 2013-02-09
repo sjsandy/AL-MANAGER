@@ -883,7 +883,7 @@ class nav_descriptions extends Walker_Nav_Menu {
         // you may change this
         $description = (!empty($item->description) and 0 == $depth ) ? '<small class="nav_desc">' . esc_attr($item->description) . '</small>' : '';
 
-        $title = apply_filters('the_title', $item->title, $item->ID);
+        $title = apply_filters('the_title', $item->pointer_title, $item->ID);
 
         $item_output = $args->before
                 . "<a $attributes>"

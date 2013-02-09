@@ -23,7 +23,7 @@ class Ext_WPNavs {
 
     private $menu,
             $theme_location = 'primary',
-            $fallback_cb = array('EXT_WPNavs', 'default_menu'),
+            $fallback_cb = '',
             $depth = 0,
             $link_before = '',
             $link_after = '',
@@ -125,6 +125,12 @@ class Ext_WPNavs {
     }
 
     public function __construct() {
+
+        $this->fallback_cb = array($this,'default_menu');
+
+    }
+
+    public function default_menu(){
 
     }
 
@@ -254,7 +260,7 @@ class nav_walker extends Walker_Nav_Menu {
         // you may change this
         $description = (!empty($item->description) and 0 == $depth ) ? '<small class="nav_desc">' . esc_attr($item->description) . '</small>' : '';
 
-        $title = apply_filters('the_title', $item->title, $item->ID);
+        $title = apply_filters('the_title', $item->pointer_title, $item->ID);
 
         $item_output = $args->before
                 . "<a $attributes>"
