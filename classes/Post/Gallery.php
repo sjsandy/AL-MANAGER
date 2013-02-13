@@ -71,6 +71,10 @@ class Post_Gallery extends Post_Query {
 
     }
 
+//    public function galleries(){
+//
+//    }
+
 }
 
 
