@@ -5,7 +5,7 @@
  *
  * @author studio
  */
-class Social_Twitter {
+class Social_Tweets {
 
     private $username = 'WordPress',
             $api_request_url = null,
@@ -67,7 +67,7 @@ class Social_Twitter {
     }
 
     public static function factory() {
-        $factory = new EXT_Tweets();
+        $factory = new Social_Tweets();
         return $factory;
     }
 
@@ -169,7 +169,7 @@ class Social_Twitter {
      * @param type $tweet_count
      * @param type $retweets
      */
-    public static function tweets($user = null, $tweet_count = 5, $retweets = false) {
+    public static function show_tweets($user = null, $tweet_count = 5, $retweets = false) {
         if (!isset($user))
             $user = 'WordPress';
         $my_tweets = self::factory()

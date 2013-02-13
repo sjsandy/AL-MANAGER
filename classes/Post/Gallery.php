@@ -72,3 +72,6 @@ class Post_Gallery extends Post_Query {
     }
 
 }
+
+
+//Post_Gallery::factory('gallery')->images();

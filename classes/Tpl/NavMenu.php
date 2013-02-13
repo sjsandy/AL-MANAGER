@@ -124,17 +124,17 @@ class TPL_NavMenu {
      * @return \EXT_WPNavs
      */
     public function factory() {
-        return $factory = new Ext_WPNavs();
+        return $factory = new TPL_NavMenu();
     }
 
 
     public function default_menu(){
-        
+
     }
 
     /**
      * <code>
-     * Ttp_NavMenu::factory()->set_depth(0)->tbs_menu('primary');
+     * Ttp_NavMenu::factory()->set_depth(0)->menu('primary');
      * </code>
      * @param type $theme_location
      * @return \cwp_navs

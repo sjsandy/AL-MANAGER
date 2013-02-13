@@ -120,6 +120,7 @@ class Adminbar_PostMenus {
 
         $node_id = $post_type . '-menu';
         $node_href = trailingslashit(admin_url()) . 'edit.php?post_type=' . $post_type;
+        
         //create parent node
         $menu_node->set_node_id($node_id)
                 ->set_node_href($node_href)
@@ -149,6 +150,8 @@ class Adminbar_PostMenus {
                     ->set_node_href(NULL);
         endif;
         $menu_node->add_node();
+
+
 
 
         // get the post data

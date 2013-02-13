@@ -23,7 +23,7 @@ class Ext_WPNavs {
 
     private $menu,
             $theme_location = 'primary',
-            $fallback_cb = '',
+            $fallback_cb = array('EXT_WPNavs', 'default_menu'),
             $depth = 0,
             $link_before = '',
             $link_after = '',
@@ -125,12 +125,6 @@ class Ext_WPNavs {
     }
 
     public function __construct() {
-
-        $this->fallback_cb = array($this,'default_menu');
-
-    }
-
-    public function default_menu(){
 
     }
 

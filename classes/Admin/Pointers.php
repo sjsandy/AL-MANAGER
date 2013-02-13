@@ -6,7 +6,7 @@
  * @author studio
  * @link  Credits
  */
-class Basejump_Admin_Pointers {
+class Admin_Pointers {
 
     protected $pointer_id,
             $pointer_anchor,
@@ -58,7 +58,7 @@ class Basejump_Admin_Pointers {
      * @return \Basejump_Admin_Pointers
      */
     static function factory($pointer_id,$pointer_anchor) {
-        $factory = new Basejump_Admin_Pointers;
+        $factory = new Admin_Pointers;
         $factory->pointer_id = $pointer_id;
         $factory->pointer_anchor = $pointer_anchor;
         return $factory;

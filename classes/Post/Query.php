@@ -44,7 +44,7 @@ class Post_Query {
         $this->custom_query = $custom_query;
     }
 
-        public function set_display_pagination($create_pagination) {
+    public function set_display_pagination($create_pagination) {
         $this->display_pagination = $create_pagination;
         return $this;
     }
@@ -63,7 +63,6 @@ class Post_Query {
         $this->post_per_page = $post_per_page;
         return $this;
     }
-
 
     public function set_query($query) {
         $this->query = $query;
@@ -115,38 +114,33 @@ class Post_Query {
     }
 
     /**
-     * Factory method
      *
-     * @param string $template_slug - post template slug
-     * @param string $template_name - post template name
+     * @param type $query
+     * @param type $template_slug
+     * @param type $template_name
      * @return \Post_Query
      */
-    public static function factory($template_slug ='content',$template_name='') {
+    public static function factory() {
 
         $factory = new Post_Query();
-        $factory->template_slug = $template_slug;
-        $factory->template_name = $template_name;
         return $factory;
-
     }
-
 
     /**
      * The WP_Query object holds the WP_query object
      *
      * @return object - WP_Query object;
      */
-    public function wp_queries(){
+    public function wp_queries() {
         $query = new WP_Query($this->query);
         $this->custom_query = $query;
         return $query;
     }
 
-
-    public function pagination($query = null){
-        if(!isset($query))
+    public function pagination($query = null) {
+        if (!isset($query))
             return;
-         //pagination custom pagination with wp_pagenavi()
+        //pagination custom pagination with wp_pagenavi()
         if ($this->display_pagination && function_exists('wp_pagenavi')):
             wp_pagenavi(array('query' => $query));
         //else display pagination using wordpress paginate_links()
@@ -159,8 +153,8 @@ class Post_Query {
                     'base' => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
                     'format' => '?paged=%#%',
                     'current' => max(1, $paged),
-                    'prev_text'    => $this->prev_text,
-                    'next_text'    => $this->next_text,
+                    'prev_text' => $this->prev_text,
+                    'next_text' => $this->next_text,
                     'total' => $query->max_num_pages
                 ));
                 echo '</div>';
@@ -168,14 +162,12 @@ class Post_Query {
         endif;
     }
 
-
-
     /**
      * Get the current page number using the get_query_var()
      *
      * @return type
      */
-    public function get_current_page(){
+    public function get_current_page() {
 
         //global $wp_query;
         $paged = 1;
@@ -185,7 +177,6 @@ class Post_Query {
             $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
         endif;
         return $this->current_page = $paged;
-
     }
 
     /**
@@ -244,44 +235,30 @@ class Post_Query {
      * @param string $def_tpl
      * <code></code>
      */
-    public function query() {
+    public function query($query = null) {
 
         global $wp_query;
 
+        if (isset($query) and is_array($query))
+            $this->query = $query;
+
         //set up a default query argument array();
-        if(!isset($this->query)){
+        if (!isset($this->query)) {
             //get the current page ready for pagination
             $this->get_current_page();
             $this->query = array('posts_per_page' => 5, 'paged' => $this->current_page);
         }
 
-
-        $this->custom_query = $this->wp_queries();
-        //$wp->query();
-        if ($this->custom_query->have_posts()):
-            while ($this->custom_query->have_posts()):
-                $this->custom_query->the_post();
-                //if the slug is post_type use the post type name for slug instead of default content
-                if ($this->template_slug == 'post_type'):
-                    get_template_part(get_post_type(), get_post_format(), $this);
-                //if the name is format will use the post format for the template name
-                elseif ($this->template_name === 'format'):
-                    get_template_part($this->template_slug, get_post_format());
-                else:
-                    get_template_part($this->template_slug, $this->template_name);
-                endif;
-            endwhile;
-        else :
-            get_template_part($this->blank_tpl, $this->blank_tpl_name);
+        //if the slug is post_type use the post type name for slug instead of default content
+        if ($this->template_slug == 'post_type')
+            $this->template_slug = get_post_type();
+        //if the name is format will use the post format for the template name
+        if ($this->template_name === 'format'):
+            $this->template_name = get_post_format();
         endif;
 
-        $this->pagination($this->custom_query);
-
-        wp_reset_postdata();
-
+        $this->the_posts();
     }
-
-
 
     /**
      * Get post with post thumbnails (set)
@@ -289,39 +266,37 @@ class Post_Query {
      * @param type $template_slug
      * @param type $template_name
      */
-    public function query_post_thumbnails($query = null,$template_slug = 'thumbnails',$template_name =''){
+    public function query_post_thumbnails($query = null, $template_slug = 'thumbnails', $template_name = '') {
 
         $this->template_slug = $template_slug;
         $this->template_name = $template_name;
 
-        if(!isset($query))
-        $this->query = array(
-            'meta_key' => '_thumbnail_id',
-            'posts_per_page' => $this->post_per_page,
-            'post_type' => 'post');
+        if (!isset($query))
+            $this->query = array(
+                'meta_key' => '_thumbnail_id',
+                'posts_per_page' => $this->post_per_page,
+                'post_type' => 'post');
 
         /** get the post */
         $this->the_posts();
     }
 
-
     /**
      * the post loop
      */
-    public function the_posts(){
+    public function the_posts() {
 
         $post = $this->wp_queries();
-        if($post->have_posts()):
-            while($post->have_posts()):
-            $post->the_post();
-            get_template_part($this->template_slug, $this->template_name);
+        if ($post->have_posts()):
+            while ($post->have_posts()):
+                $post->the_post();
+                get_template_part($this->template_slug, $this->template_name);
             endwhile;
         endif;
-         /** add pagination */
+        /** add pagination */
         $this->pagination($post);
         /** now reset post fata */
         wp_reset_postdata();
-
     }
 
 }
