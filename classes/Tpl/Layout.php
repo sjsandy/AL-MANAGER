@@ -66,29 +66,29 @@ class Tpl_Layout {
          //$tpl = self::base($template);
 
         $template_name = self::template_name($template);
-//        if(is_single()) $template_name = '-single';
-//        if(is_page()) $template_name = '-page';
-//        if(is_archive()) $template_name = '-archive';
-//        if(is_search()) $template_name = '-search';
-//        if(is_404()) $template_name = '-404';
-//        if(is_post_type_archive() and isset($post->ID)) $template_name = get_post_type ($post->ID);
 
-        if($phone):
-            if($phone == 'mobile-device'):
+        if ($phone):
 
-            $located = locate_template(array(
-                'mobile-'.$template_name.'.php',
-                'mobile.php',
-                'tablet-'.$template_name.'.php',
-                'tablet.php',
-                $template_name.'.php'
-                ));
+
+            if ($phone == 'mobile-device'):
+                if(is_front_page() AND get_option('show_on_front') == 'posts' AND !get_option('page_on_front')) $tpl[] = 'mobile-home.php';
+                $tpl[] =  'mobile-' . $template_name . '.php';
+                $tpl[] =  'mobile.php';
+                $tpl[] =  'tablet-' . $template_name . '.php';
+                $tpl[] =  'tablet.php';
+                $tpl[] =   $template_name . '.php';
+                $tpl[] =  'index.php';
+
+                $located = locate_template($tpl);
             else :
-               $located = locate_template(array(
-               'tablet-'.$template_name.'.php',
-               'tablet.php',
-               $template_name.'.php'
-                ));
+                if(is_front_page() AND get_option('show_on_front') == 'posts' AND !get_option('page_on_front')) $tpl[] = 'tablet-home.php';
+                $tpl[] =  'tablet-' . $template_name . '.php';
+                $tpl[] =  'tablet.php';
+                $tpl[] =   $template_name . '.php';
+                $tpl[] =  'index.php';
+
+                $located = locate_template($tpl);
+
             endif;
 
         if (!empty($located))
@@ -253,7 +253,7 @@ class Tpl_Layout {
 
         $located = false;
         self::bj_tpl_directory();
-        $path = self::$bj_tpl_directory;
+        $path = 'tpl';
 
         if (isset($slug))
             $path = $path . "/{$slug}/";
@@ -280,6 +280,7 @@ class Tpl_Layout {
 
 
         if ($load && '' != $located)
+            load_template($located, $require_once);
             return $located;
     }
 
@@ -324,12 +325,12 @@ class Tpl_Layout {
     public static function theme_mods($module = null, $base = '', $dir = 'modules') {
 
         if (isset($module)):
-            $locate_mod = Tpl_Layout::locate_tpl($module . '.php', $dir);
-            if ($locate_mod) {
-                Tpl_Layout::get_template_part($module, $base, $dir);
+            $locate_mod = locate_template(self::$bj_tpl_directory.'/modules/'.$module.'.php');
+            if ($locate_mod) :
+                Tpl_Layout::get_template_part($module, $base, $dir, $dir);
                 return true;
-            }
-            else
+            endif;
+            else :
                 return false;
         endif;
     }
