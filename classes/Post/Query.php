@@ -18,7 +18,7 @@ class Post_Query {
             /** template name */
             $template_name = '',
             /** template slug */
-            $template_slug = 'content',
+            $template_slug = 'tpl/views/content',
             /** number of post per page */
             $post_per_page = 4,
             /** tpl slug for empty queries */
@@ -115,14 +115,15 @@ class Post_Query {
 
     /**
      *
-     * @param type $query
-     * @param type $template_slug
-     * @param type $template_name
+     * @param type $slug
+     * @param type $name
      * @return \Post_Query
      */
-    public static function factory() {
+    public static function factory($slug= null, $name = null) {
 
         $factory = new Post_Query();
+        if(isset($slug)) $factory->set_template_slug ($slug);
+        if(isset($name)) $factory->set_template_name ($name);
         return $factory;
 
     }
