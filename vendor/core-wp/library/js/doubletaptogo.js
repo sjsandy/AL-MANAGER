@@ -9,7 +9,7 @@
 	$.fn.doubleTapToGo = function( params )
 	{
 		if( !( 'ontouchstart' in window ) &&
-			!window.navigator.msPointerEnabled &&
+			!navigator.msMaxTouchPoints &&
 			!navigator.userAgent.toLowerCase().match( /windows phone os 7/i ) ) return false;
 
 		this.each( function()

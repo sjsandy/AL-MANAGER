@@ -41,7 +41,9 @@ class Theme_Function {
     }
 
     public static function breadcrumbs(){
+
         core_functions::breadcrumbs();
+        return;
     }
 
 
@@ -65,7 +67,6 @@ class Theme_Function {
 		if(is_404()){ echo "404 - Page not Found"; }
 		if(is_search()){ echo "Search"; }
 		if(is_year()){ echo get_the_time('Y'); }
-
 		echo "</ul>";
 
           }
@@ -115,6 +116,46 @@ class Theme_Function {
         else :
             return false;
         endif;
+    }
+
+    public static function file_uri($file_name = null) {
+        $file = FALSE;
+
+        if (!isset($file_name))
+            return false;
+
+        $uri = locate_template($file_name);
+
+        if (!$uri)
+            return false;
+
+        $stylesheet_file = get_stylesheet_directory() . '/' . $file_name;
+        $template_file = get_template_directory() . '/' . $file_name;
+
+
+        if (file_exists($stylesheet_file)):
+            $file = get_stylesheet_directory_uri().'/'.$file_name;
+        elseif (file_exists($template_file)):
+            $file = get_template_directory_uri().'/'.$file_name;
+        endif;
+
+        return $file;
+
+    }
+
+
+    /**
+     *
+     * @param string $file_name image name
+     * @param string $dir dirname default images
+     * @return mixed echo file url or false
+     */
+    public static function image_url($file_name = null, $dir = 'images'){
+
+        if(!isset($file_name)) return false;
+
+        echo self::file_uri($dir.'/'.$file_name);
+
     }
 
 }

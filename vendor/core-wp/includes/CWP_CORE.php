@@ -601,7 +601,7 @@ class core_functions {
         $before = '<span class="current">'; // tag before the current crumb
         $after = '</span>'; // tag after the current crumb
 
-        if (!is_home() && !is_front_page() || is_paged()) {
+        if (!is_home() || !is_front_page() || is_paged()) {
 
             echo '<div id="crumbs">';
 
@@ -639,7 +639,7 @@ class core_functions {
                     echo get_category_parents($cat, TRUE, ' ' . $delimiter . ' ');
                     echo $before . get_the_title() . $after;
                 }
-            } elseif (!is_single() && !is_page() && get_post_type() != 'post') {
+            } elseif (!is_single() && !is_page() && get_post_type() != 'post' && !is_404()) {
                 $post_type = get_post_type_object(get_post_type());
                 echo $before . $post_type->labels->singular_name . $after;
             } elseif (is_attachment()) {

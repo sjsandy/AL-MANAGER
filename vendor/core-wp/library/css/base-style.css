@@ -154,7 +154,7 @@ NAV#top LI
 }
 NAV#top A:hover
 {
-	color: #FFFFFF;
+	/* color: #FFFFFF; */
 }
 /*HEADER***************************************/
 #header
@@ -344,6 +344,7 @@ LIST - MENU *********************************/
 .home #content
 {
 	min-height: 300px;
+	padding-top: 60px;
 }
 /*ARTICLES*************************************/
 #articles

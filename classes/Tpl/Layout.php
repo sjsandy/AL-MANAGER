@@ -325,13 +325,16 @@ class Tpl_Layout {
     public static function theme_mods($module = null, $base = '', $dir = 'modules') {
 
         if (isset($module)):
-            $locate_mod = locate_template(self::$bj_tpl_directory.'/modules/'.$module.'.php');
+        $tpls[] = self::$bj_tpl_directory . '/modules/' . $module . '.php';
+        if(isset($base))
+        $tpls[] = self::$bj_tpl_directory . '/modules/' . $module .'-'.$base. '.php';
+            $locate_mod = locate_template($tpls);
             if ($locate_mod) :
                 Tpl_Layout::get_template_part($module, $base, $dir, $dir);
                 return true;
             endif;
-            else :
-                return false;
+        else :
+            return false;
         endif;
     }
 
@@ -356,8 +359,8 @@ class Tpl_Layout {
      *
      */
     public static function section_mod($module = null, $name = null, $dir = 'modules') {
-        if (!$name)
-            $name = Tpl_Layout::$base_tpl;
+        if (!isset($name))
+            $name = Tpl_Layout::base_tpl();
         return Tpl_Layout::theme_mods($module, $name, $dir);
     }
 

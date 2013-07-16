@@ -149,14 +149,23 @@ function jump_scripts() {
     wp_register_script('local-scroll', cwp::locate_in_library('jquery.serialScroll.min.js', 'serialScroll'), null, '', true);
     wp_register_script('doubletap', cwp::locate_in_library('doubletap.min.js', 'js'), null, '', true);
     wp_register_script('theme-js', cwp::locate_in_library('theme.js', 'js'), null, '', true);
+    wp_register_script('mobile-js', cwp::locate_in_library('theme.js', 'js'), null, '', true);
     wp_register_script('balance-text', cwp::locate_in_library('jquery.balancetext.js', 'js'), null, '', true);
     wp_register_script('pretty-photo', cwp::locate_in_library('jquery.prettyPhoto.js', 'pretty-photo/js'), null, '', true);
+    wp_register_script('midway', cwp::locate_in_library('midway.min.js', 'midway'), null, '', true);
+    wp_register_script('doubletaptogo', cwp::locate_in_library('doubletaptogo.min.js', 'js'), null, '', true);
+//    wp_register_script('unslider', cwp::locate_in_library('unslider.min.js', 'js'), 'jquery', '', true);
+//    wp_register_script('wp-unslider', cwp::locate_in_library('wp-unslider.js', 'js'), 'jquery', '', true);
+
+
+//    wp_register_script('nivo', cwp::locate_in_library('jquery.nivo.slider.js', 'nivo'), 'jquery', '', true);
+//    wp_register_script('nivo-config', cwp::locate_in_library('nivo-config.js', 'js'), 'jquery', '', true);
+//
+//    wp_register_style('nivo-default', cwp::locate_in_library('default.css', 'nivo/themes/default'));
+
+
+//    STYLES***********************************
     wp_register_style('pretty-photo-css', cwp::locate_in_library('prettyPhoto.css', 'pretty-photo/css'));
-
-
-
-
-
 
     /**
      * Main theme js scripts
@@ -393,14 +402,6 @@ function bj_content_nav($nav_id) {
         <nav role="navigation" id="<?php echo $nav_id; ?>" class="<?php echo $nav_class; ?>">
             <h1 class="assistive-text"><?php _e('Post navigation', 'bj'); ?></h1>
 
-    <?php
-    if (!is_home() AND $nav_id == 'nav-above') :
-        core_functions::breadcrumbs();
-    endif;
-    ?>
-
-
-
     <?php if (is_single() AND $nav_id == 'nav-below') : // navigation links for single posts   ?>
 
                 <?php previous_post_link('<div class="nav-previous">%link</div>', '<span class="meta-nav">' . _x('&larr;', 'Previous post link', 'bj') . '</span> %title'); ?>
@@ -436,6 +437,5 @@ function bj_content_nav($nav_id) {
 
         add_filter('widget_text', 'shortcode_unautop');
         add_filter('widget_text', 'do_shortcode');
-
 
 
