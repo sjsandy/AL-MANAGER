@@ -120,7 +120,7 @@ class Theme_Nav {
      * @return \EXT_WPNavs
      */
     public static function factory() {
-        return $factory = new Theme_Nav();
+        return $factory = new Theme_Nav;
     }
 
     /**

@@ -154,6 +154,7 @@ function jump_scripts() {
     wp_register_script('pretty-photo', cwp::locate_in_library('jquery.prettyPhoto.js', 'pretty-photo/js'), null, '', true);
     wp_register_script('midway', cwp::locate_in_library('midway.min.js', 'midway'), null, '', true);
     wp_register_script('doubletaptogo', cwp::locate_in_library('doubletaptogo.min.js', 'js'), null, '', true);
+    wp_register_script('collage', cwp::locate_in_library('jquery.collagePlus.min.js', 'js'), array('jquery'), '', true);
 //    wp_register_script('unslider', cwp::locate_in_library('unslider.min.js', 'js'), 'jquery', '', true);
 //    wp_register_script('wp-unslider', cwp::locate_in_library('wp-unslider.js', 'js'), 'jquery', '', true);
 
