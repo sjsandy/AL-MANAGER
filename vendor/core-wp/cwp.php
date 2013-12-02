@@ -520,7 +520,7 @@ class cwp {
      * cwp::add_widget('Top Sidebar', 'top-sidebar', 'Top sidebar widget');
      * </code>
      */
-    public static function register_sidebar($name, $widget_id, $description = "", $div = "div", $title = 'h3') {
+    public static function register_sidebar($name, $widget_id, $description = "", $div = "aside", $title = 'h3') {
         //$widget_id = preg_replace(" ", "-", $name);
         register_sidebar(array(
             'name' => ucfirst($name),

@@ -103,22 +103,21 @@ class Basejump_Theme_Options {
      */
     public static function contacts(){
 
-
         $section = Customizer_Settings::add_section('bj_contacts', 'Contact info', 'Setup the site contact info');
 
-        Customizer_Settings::add_option($section, 'contact _org', 'Organization name', '')->customizer();
+        Customizer_Settings::add_option($section, 'contact_organization', 'Organization', 'Organization Name')->customizer();
 
-        Customizer_Settings::add_option($section, 'contact_name', 'Contact name', '')->customizer();
+        Customizer_Settings::add_option($section, 'contact_name', 'Contact name', 'John Hancock')->customizer();
 
-        Customizer_Settings::add_option($section, 'contact_email', 'Email', '')->customizer();
+        Customizer_Settings::add_option($section, 'contact_email', 'Email', 'me@organization.com')->customizer();
 
-        Customizer_Settings::add_option($section, 'contact_address', 'Address', '')->customizer();
+        Customizer_Settings::add_option($section, 'contact_address', 'Address', '000 Street Address')->customizer();
 
-        Customizer_Settings::add_option($section, 'contact_city', 'City', '')->customizer();
+        Customizer_Settings::add_option($section, 'contact_city', 'City', 'City')->customizer();
 
-        Customizer_Settings::add_option($section, 'contact_state', 'State', '')->customizer();
+        Customizer_Settings::add_option($section, 'contact_state', 'State', 'State')->customizer();
 
-        Customizer_Settings::add_option($section, 'contact_zip', 'Zip Code', '')->customizer();
+        Customizer_Settings::add_option($section, 'contact_zip_code', 'Zip Code', '00000')->customizer();
 
     }
 
